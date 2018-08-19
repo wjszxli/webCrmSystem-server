@@ -26,9 +26,9 @@ module.exports.saveCustomer = async (ctx, next) => {
             isCollaborate,
             people
         })
-        ctx.body = response('0', {
+        ctx.state.data = {
             tip: '保存成功'
-        })
+        }
     } catch (error) {
         throw new Error(error)
     }
@@ -64,7 +64,7 @@ module.exports.getCustomer = async (ctx, next) => {
                 }
             })
 
-        ctx.body = ctx.body = response('0', res)
+        ctx.state.data = res
     } catch (error) {
         throw new Error(error)
     }
@@ -97,7 +97,8 @@ module.exports.getCustomerCount = async (ctx, next) => {
                     this.where('companyName', 'like', `%${customer}%`).orWhere('brand', 'like', `%${customer}%`)
                 }
             })
-        ctx.body = ctx.body = response('0', res)
+        // ctx.status = 401
+        ctx.state.data = res
     } catch (error) {
         throw new Error(error)
     }
@@ -119,9 +120,9 @@ module.exports.deleteCustomer = async (ctx, next) => {
         if (isDelete) {
             tip = '删除成功'
         }
-        ctx.body = response('0', {
+        ctx.state.data = {
             tip
-        })
+        }
     } catch (error) {
         console.log('error', error)
         throw new Error(error)
