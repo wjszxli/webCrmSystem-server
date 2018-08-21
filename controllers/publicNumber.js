@@ -1,7 +1,9 @@
 const mysql = require('../utils/mysql')
+const { isLogin } = require('../utils/util')
 
 module.exports.savePublicNumber = async (ctx, next) => {
     try {
+        isLogin(ctx, next)
         const {
             name,
             dataId,
@@ -55,13 +57,42 @@ module.exports.savePublicNumber = async (ctx, next) => {
 
 module.exports.getPublicNumber = async (ctx, next) => {
     try {
+        isLogin(ctx, next)
         const {
             pageIndex,
             pageSize,
+            publicNumber,
+            type,
+            starS,
+            starE,
+            womenRatioS,
+            womenRatioE
         } = ctx.request.query
+        const searchData = {}
+
+        if (type) {
+            searchData.type = type
+        }
 
         const res = await mysql('cPublicNumber').limit(pageSize).offset((pageIndex - 1) * pageSize)
-        // .where(searchData)
+        .where(searchData)
+        .where(function () {
+            if (publicNumber) {
+                this.where('name', 'like', `%${publicNumber}%`)
+            }
+            if (starS) {
+                this.where('star', '>', starS)
+            }
+            if (starE) {
+                this.where('star', '<', starE)
+            }
+            if (womenRatioS) {
+                this.where('womenRatio', '>', womenRatioS)
+            }
+            if (womenRatioE) {
+                this.where('womenRatio', '>', womenRatioE)
+            }
+        })
         ctx.state.data = res
 
     } catch (error) {
@@ -71,32 +102,40 @@ module.exports.getPublicNumber = async (ctx, next) => {
 
 module.exports.getPublicNumberCount = async (ctx, next) => {
     try {
-        // const {
-        //     isDelete,
-        //     customer,
-        //     people,
-        //     isCollaborate
-        // } = ctx.request.query
+        isLogin(ctx, next)
+        const {
+            publicNumber,
+            type,
+            starS,
+            starE,
+            womenRatioS,
+            womenRatioE
+        } = ctx.request.query
+        const searchData = {}
 
-        // const searchData = {}
-
-        // if (isDelete) {
-        //     searchData.isDelete = isDelete
-        // }
-        // if (people) {
-        //     searchData.people = people
-        // }
-        // if (isCollaborate) {
-        //     searchData.isCollaborate = isCollaborate
-        // }
+        if (type) {
+            searchData.type = type
+        }
 
         const res = await mysql('cPublicNumber').count('id as count')
-        // .where(searchData)
-        //     .where(function () {
-        //         if (customer) {
-        //             this.where('companyName', 'like', `%${customer}%`).orWhere('brand', 'like', `%${customer}%`)
-        //         }
-        //     })
+        .where(searchData)
+        .where(function () {
+            if (publicNumber) {
+                this.where('name', 'like', `%${publicNumber}%`)
+            }
+            if (starS) {
+                this.where('star', '>', starS)
+            }
+            if (starE) {
+                this.where('star', '<', starE)
+            }
+            if (womenRatioS) {
+                this.where('womenRatio', '>', womenRatioS)
+            }
+            if (womenRatioE) {
+                this.where('womenRatio', '>', womenRatioE)
+            }
+        })
         ctx.state.data = res
     } catch (error) {
         throw new Error(error)
@@ -105,6 +144,7 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
 
 module.exports.deletePublicNumber = async (ctx, next) => {
     try {
+        isLogin(ctx, next)
         const {
             id,
             isDelete
@@ -130,6 +170,7 @@ module.exports.deletePublicNumber = async (ctx, next) => {
 
 module.exports.getOnePublicNumber = async (ctx, next) => {
     try {
+        isLogin(ctx, next)
         const {
             id
         } = ctx.request.query

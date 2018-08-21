@@ -1,7 +1,9 @@
 /**
  * ajax 服务路由集合
  */
-const router = require('koa-router')()
+const router = require('koa-router')({
+    prefix: '/api'
+})
 const controllers = require('../controllers')
 
 // 填写用户信息
