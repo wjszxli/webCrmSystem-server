@@ -34,6 +34,21 @@ module.exports.savePlan = async (ctx, next) => {
             publicnumberid: publicNumberId,
             planpeople: planPeople
         })
+        if (publicNumberId) {
+            const res = await mysql('cPublicNumber')
+                .where({
+                    id: publicNumberId
+                })
+            if (res.length) {
+                await mysql('cPublicNumber')
+                    .update({
+                        plancount: res[0].planCount + 1
+                    })
+                    .where({
+                        id: publicNumberId
+                    })
+            }
+        }
         ctx.state.data = {
             tip: '保存成功'
         }
@@ -71,6 +86,9 @@ module.exports.getPlan = async (ctx, next) => {
         if (isPay) {
             searchData.isPay = isPay
         }
+        console.log('pageSize', pageSize)
+        console.log('pageIndex', pageIndex)
+
         let res = await mysql('cPlan').limit(pageSize).offset((pageIndex - 1) * pageSize)
             .where(searchData)
             .where(function () {
@@ -121,7 +139,7 @@ module.exports.getPlanCount = async (ctx, next) => {
             searchData.isPay = isPay
         }
 
-        let res = await mysql('cCustomer').count('id as count')
+        let res = await mysql('cPlan').count('id as count')
             .where(searchData)
             .where(function () {
                 if (publicNumber) {

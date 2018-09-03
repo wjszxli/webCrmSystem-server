@@ -1,7 +1,4 @@
 const mysql = require('../utils/mysql')
-const {
-    response
-} = require('../utils/util')
 
 module.exports.saveCustomer = async (ctx, next) => {
     try {

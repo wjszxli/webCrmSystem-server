@@ -15,7 +15,9 @@ module.exports.savePublicNumber = async (ctx, next) => {
             lastTitle,
             lastCost,
             womenRatio,
-            operation
+            operation,
+            brush,
+            type
         } = ctx.request.body
         if (dataId) {
             if (operation==='add') {
@@ -29,7 +31,9 @@ module.exports.savePublicNumber = async (ctx, next) => {
                     secondcost: secondCost,
                     lasttitle: lastTitle,
                     lastcost: lastCost,
-                    womenratio: womenRatio
+                    womenratio: womenRatio,
+                    type,
+                    brush
                 })
             } else if (operation==='update') {
                 await mysql('cPublicNumber').update({
@@ -41,7 +45,9 @@ module.exports.savePublicNumber = async (ctx, next) => {
                     secondcost: secondCost,
                     lasttitle: lastTitle,
                     lastcost: lastCost,
-                    womenratio: womenRatio
+                    womenratio: womenRatio,
+                    brush,
+                    type
                 }).where({
                     dataid:dataId
                 })
