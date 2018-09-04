@@ -1,5 +1,7 @@
 const mysql = require('../utils/mysql')
-const { isLogin } = require('../utils/util')
+const {
+    isLogin
+} = require('../utils/util')
 
 module.exports.savePublicNumber = async (ctx, next) => {
     try {
@@ -20,10 +22,10 @@ module.exports.savePublicNumber = async (ctx, next) => {
             type
         } = ctx.request.body
         if (dataId) {
-            if (operation==='add') {
+            if (operation === 'add') {
                 await mysql('cPublicNumber').insert({
                     name,
-                    dataid:dataId,
+                    dataid: dataId,
                     star,
                     toptitle: topTitle,
                     topcost: topCost,
@@ -35,7 +37,7 @@ module.exports.savePublicNumber = async (ctx, next) => {
                     type,
                     brush
                 })
-            } else if (operation==='update') {
+            } else if (operation === 'update') {
                 await mysql('cPublicNumber').update({
                     name,
                     star,
@@ -49,7 +51,7 @@ module.exports.savePublicNumber = async (ctx, next) => {
                     brush,
                     type
                 }).where({
-                    dataid:dataId
+                    dataid: dataId
                 })
             }
         }
@@ -81,24 +83,24 @@ module.exports.getPublicNumber = async (ctx, next) => {
         }
 
         const res = await mysql('cPublicNumber').limit(pageSize).offset((pageIndex - 1) * pageSize)
-        .where(searchData)
-        .where(function () {
-            if (publicNumber) {
-                this.where('name', 'like', `%${publicNumber}%`)
-            }
-            if (starS) {
-                this.where('star', '>', starS)
-            }
-            if (starE) {
-                this.where('star', '<', starE)
-            }
-            if (womenRatioS) {
-                this.where('womenRatio', '>', womenRatioS)
-            }
-            if (womenRatioE) {
-                this.where('womenRatio', '>', womenRatioE)
-            }
-        })
+            .where(searchData)
+            .where(function () {
+                if (publicNumber) {
+                    this.where('name', 'like', `%${publicNumber}%`)
+                }
+                if (starS) {
+                    this.where('star', '>', starS)
+                }
+                if (starE) {
+                    this.where('star', '<', starE)
+                }
+                if (womenRatioS) {
+                    this.where('womenRatio', '>', womenRatioS)
+                }
+                if (womenRatioE) {
+                    this.where('womenRatio', '>', womenRatioE)
+                }
+            })
         ctx.state.data = res
 
     } catch (error) {
@@ -124,24 +126,24 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
         }
 
         const res = await mysql('cPublicNumber').count('id as count')
-        .where(searchData)
-        .where(function () {
-            if (publicNumber) {
-                this.where('name', 'like', `%${publicNumber}%`)
-            }
-            if (starS) {
-                this.where('star', '>', starS)
-            }
-            if (starE) {
-                this.where('star', '<', starE)
-            }
-            if (womenRatioS) {
-                this.where('womenRatio', '>', womenRatioS)
-            }
-            if (womenRatioE) {
-                this.where('womenRatio', '>', womenRatioE)
-            }
-        })
+            .where(searchData)
+            .where(function () {
+                if (publicNumber) {
+                    this.where('name', 'like', `%${publicNumber}%`)
+                }
+                if (starS) {
+                    this.where('star', '>', starS)
+                }
+                if (starE) {
+                    this.where('star', '<', starE)
+                }
+                if (womenRatioS) {
+                    this.where('womenRatio', '>', womenRatioS)
+                }
+                if (womenRatioE) {
+                    this.where('womenRatio', '>', womenRatioE)
+                }
+            })
         ctx.state.data = res
     } catch (error) {
         throw new Error(error)
@@ -180,12 +182,34 @@ module.exports.getOnePublicNumber = async (ctx, next) => {
         const {
             id
         } = ctx.request.query
-        res = await mysql('cCustomer').where({
+        res = await mysql('cPublicNumber').where({
             id
         })
         ctx.state.data = res
     } catch (error) {
         console.log('error', error)
+        throw new Error(error)
+    }
+}
+
+module.exports.addInDetail = async (ctx, next) => {
+    try {
+        const {
+            id,
+            inDetail
+        } = ctx.request.body
+
+        await mysql('cPublicNumber')
+            .update({
+                indetail: inDetail
+            })
+            .where({
+                id
+            })
+        ctx.state.data = {
+            tip: '添加投入详情成功'
+        }
+    } catch (error) {
         throw new Error(error)
     }
 }

@@ -37,7 +37,7 @@ module.exports.savePlan = async (ctx, next) => {
             remark,
             publicnumberid: publicNumberId,
             planpeople: planPeople,
-            customername:customerName
+            customername: customerName
         })
         if (publicNumberId) {
             const res = await mysql('cPublicNumber')
@@ -265,6 +265,28 @@ module.exports.getOnePlan = async (ctx, next) => {
             id
         })
         ctx.state.data = res
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+module.exports.addFinance = async (ctx, next) => {
+    try {
+        const {
+            id,
+            financeReamrk
+        } = ctx.request.body
+
+        const res = await mysql('cPlan')
+            .update({
+                financereamrk: financeReamrk
+            })
+            .where({
+                id
+            })
+        ctx.state.data = {
+            tip: '添加财务备注成功'
+        }
     } catch (error) {
         throw new Error(error)
     }

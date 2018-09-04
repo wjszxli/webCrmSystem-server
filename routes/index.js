@@ -66,8 +66,18 @@ router.get('/getOnePlan', controllers.plan.getOnePlan)
 router.post('/follow', controllers.customer.follow)
 
 router.get('/getAllCustomer', controllers.customer.getAllCustomer)
+
+router.post('/addFinance', controllers.plan.addFinance)
+
+router.post('/addInDetail', controllers.publicNumber.addInDetail)
+
+router.get('/getOnePublicNumber', controllers.publicNumber.getOnePublicNumber)
+
+router.post('/uploadImage', controllers.upload.uploadImage)
+
+
 // 处理404
-router.post('*', controllers.error.notFind)
-router.get('*', controllers.error.notFind)
+// router.post('*', controllers.error.notFind)
+// router.get('*', controllers.error.notFind)
 
 module.exports = router
