@@ -140,3 +140,32 @@ module.exports.getOneCustomer = async (ctx, next) => {
         throw new Error(error)
     }
 }
+
+module.exports.follow = async (ctx, next) => {
+    try {
+        const {
+            id,
+            remark
+        } = ctx.request.body
+
+        await mysql('cCustomer').update({
+            remark
+        })
+        .where({
+            id
+        })
+        ctx.state.data = {
+            tip: '跟进成功'
+        }
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+module.exports.getAllCustomer = async (ctx, next) => {
+    let res = await mysql('cCustomer')
+    .where({
+        isDelete:0
+    })
+    ctx.state.data = res
+}

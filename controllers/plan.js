@@ -17,22 +17,27 @@ module.exports.savePlan = async (ctx, next) => {
             taxRouter,
             remark,
             publicNumberId,
-            planPeople
+            planPeople,
+            customer,
+            customerName
         } = ctx.request.body
 
+        console.log('rrrr', ctx.request.body)
         await mysql('cPlan').insert({
             publicnumber: publicNumber,
             location,
             intime: inTime,
             price,
             cost,
+            customer,
             isinvoiceclient: isInvoiceClient,
             taxclient: taxClient,
             isinvoicerouter: isInvoiceRouter,
             taxrouter: taxRouter,
             remark,
             publicnumberid: publicNumberId,
-            planpeople: planPeople
+            planpeople: planPeople,
+            customername:customerName
         })
         if (publicNumberId) {
             const res = await mysql('cPublicNumber')
@@ -183,16 +188,23 @@ module.exports.deletePlan = async (ctx, next) => {
 
 module.exports.updatePlanBack = async (ctx, next) => {
     try {
-        const {
-            ids
+        let {
+            ids,
+            type
         } = ctx.request.body
+
+        if (type === 1) {
+            type = 0
+        } else if (type === 0) {
+            type = 1
+        }
 
         if (ids.length > 0) {
             res = await mysql('cPlan').update({
-                isBack: 1
+                isBack: type
             }).whereIn('id', ids)
         }
-        const tip = '回款成功'
+        const tip = '操作成功'
         ctx.state.data = {
             tip
         }
@@ -203,16 +215,23 @@ module.exports.updatePlanBack = async (ctx, next) => {
 
 module.exports.updatePlanPay = async (ctx, next) => {
     try {
-        const {
-            ids
+        let {
+            ids,
+            type
         } = ctx.request.body
+
+        if (type === 1) {
+            type = 0
+        } else if (type === 0) {
+            type = 1
+        }
 
         if (ids.length > 0) {
             res = await mysql('cPlan').update({
-                isPay: 1
+                isPay: type
             }).whereIn('id', ids)
         }
-        const tip = '支付成功'
+        const tip = '操作成功'
         ctx.state.data = {
             tip
         }

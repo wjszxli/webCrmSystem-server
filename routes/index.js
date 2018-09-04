@@ -62,6 +62,10 @@ router.post('/updatePlanBack', controllers.plan.updatePlanBack)
 router.post('/updatePlanPay', controllers.plan.updatePlanPay)
 
 router.get('/getOnePlan', controllers.plan.getOnePlan)
+
+router.post('/follow', controllers.customer.follow)
+
+router.get('/getAllCustomer', controllers.customer.getAllCustomer)
 // 处理404
 router.post('*', controllers.error.notFind)
 router.get('*', controllers.error.notFind)
