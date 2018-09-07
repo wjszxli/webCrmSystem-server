@@ -73,6 +73,7 @@ module.exports.getPublicNumber = async (ctx, next) => {
             type,
             starS,
             starE,
+            brush,
             womenRatioS,
             womenRatioE
         } = ctx.request.query
@@ -99,6 +100,9 @@ module.exports.getPublicNumber = async (ctx, next) => {
                 }
                 if (womenRatioE) {
                     this.where('womenRatio', '>', womenRatioE)
+                }
+                if (brush) {
+                    this.where('brush', '=', brush)
                 }
             })
         ctx.state.data = res
@@ -208,6 +212,52 @@ module.exports.addInDetail = async (ctx, next) => {
             })
         ctx.state.data = {
             tip: '添加投入详情成功'
+        }
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+module.exports.updatePublicNumber = async (ctx, next) => {
+    try {
+        isLogin(ctx, next)
+        const {
+            id,
+            name,
+            dataId,
+            star,
+            topTitle,
+            topCost,
+            secondTitle,
+            secondCost,
+            lastTitle,
+            lastCost,
+            womenRatio,
+            brush,
+            type
+        } = ctx.request.body
+        if (id) {
+            await mysql('cPublicNumber')
+            .update({
+                name,
+                star,
+                dataid:dataId,
+                toptitle: topTitle,
+                topcost: topCost,
+                secondtitle: secondTitle,
+                secondcost: secondCost,
+                lasttitle: lastTitle,
+                lastcost: lastCost,
+                womenratio: womenRatio,
+                updateRouter: '平台',
+                brush,
+                type
+            }).where({
+                id
+            })
+        }
+        ctx.state.data = {
+            tip: '修改成功'
         }
     } catch (error) {
         throw new Error(error)

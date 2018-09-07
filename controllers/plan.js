@@ -21,8 +21,7 @@ module.exports.savePlan = async (ctx, next) => {
             customer,
             customerName
         } = ctx.request.body
-
-        console.log('rrrr', ctx.request.body)
+        
         await mysql('cPlan').insert({
             publicnumber: publicNumber,
             location,
@@ -39,11 +38,13 @@ module.exports.savePlan = async (ctx, next) => {
             planpeople: planPeople,
             customername: customerName
         })
+        
         if (publicNumberId) {
             const res = await mysql('cPublicNumber')
                 .where({
                     id: publicNumberId
                 })
+                console.log('wjszxli', res)
             if (res.length) {
                 await mysql('cPublicNumber')
                     .update({
@@ -91,9 +92,6 @@ module.exports.getPlan = async (ctx, next) => {
         if (isPay) {
             searchData.isPay = isPay
         }
-        console.log('pageSize', pageSize)
-        console.log('pageIndex', pageIndex)
-
         let res = await mysql('cPlan').limit(pageSize).offset((pageIndex - 1) * pageSize)
             .where(searchData)
             .where(function () {

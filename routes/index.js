@@ -75,6 +75,9 @@ router.get('/getOnePublicNumber', controllers.publicNumber.getOnePublicNumber)
 
 router.post('/uploadImage', controllers.upload.uploadImage)
 
+router.get('/public/upload/*.png', controllers.upload.getImage)
+
+router.post('/updatePublicNumber', controllers.publicNumber.updatePublicNumber)
 
 // 处理404
 // router.post('*', controllers.error.notFind)
