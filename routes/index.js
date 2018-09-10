@@ -79,6 +79,14 @@ router.get('/public/upload/*.png', controllers.upload.getImage)
 
 router.post('/updatePublicNumber', controllers.publicNumber.updatePublicNumber)
 
+router.get('/getAuthor', controllers.author.getAuthor)
+
+router.get('/getAuthorCount', controllers.author.getAuthorCount)
+
+router.get('/getDept', controllers.dept.getDept)
+
+router.get('/getDeptCount', controllers.dept.getDeptCount)
+
 // 处理404
 // router.post('*', controllers.error.notFind)
 // router.get('*', controllers.error.notFind)
