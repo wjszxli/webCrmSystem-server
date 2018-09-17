@@ -72,6 +72,7 @@ module.exports.uploadImage = async (ctx, next) => {
 
 module.exports.getImage = async (ctx, next) => {
     try {
+        console.log('wjszxli')
         const url = ctx.request.path.replace('/api','')
         const staticPath = '../' + url
         const data = fs.readFileSync(path.join(__dirname, staticPath))
