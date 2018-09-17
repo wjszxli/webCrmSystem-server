@@ -79,9 +79,9 @@ router.get('/public/upload/*.png', controllers.upload.getImage)
 
 router.post('/updatePublicNumber', controllers.publicNumber.updatePublicNumber)
 
-router.get('/getAuthor', controllers.author.getAuthor)
+// router.get('/getAuthor', controllers.author.getAuthor)
 
-router.get('/getAuthorCount', controllers.author.getAuthorCount)
+// router.get('/getAuthorCount', controllers.author.getAuthorCount)
 
 router.get('/getDept', controllers.dept.getDept)
 

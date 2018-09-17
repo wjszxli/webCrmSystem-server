@@ -5,10 +5,12 @@ const mysql = require('../utils/mysql')
 const fs = require('fs'); // 图片路径
 
 const mkdirs = (dirname, callback) => {
+    console.log('dirname1', dirname)
     fs.exists(dirname, function (exists) {
         if (exists) {
             callback();
         } else {
+            console.log('dirname2', path.dirname(dirname))
             mkdirs(path.dirname(dirname), function () {
                 fs.mkdir(dirname, callback);
             });
