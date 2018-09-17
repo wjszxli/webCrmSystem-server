@@ -75,6 +75,7 @@ module.exports.getImage = async (ctx, next) => {
         const url = ctx.request.path.replace('/api','')
         const staticPath = '../' + url
         const data = fs.readFileSync(path.join(__dirname, staticPath))
+        console.log('path.join(__dirname, staticPath)', path.join(__dirname, staticPath))
         ctx.set('Content-Type', 'image/png')
         ctx.body = data
     } catch (error) {
