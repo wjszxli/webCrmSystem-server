@@ -75,7 +75,7 @@ router.get('/getOnePublicNumber', controllers.publicNumber.getOnePublicNumber)
 
 router.post('/uploadImage', controllers.upload.uploadImage)
 
-router.get('/public/upload/*.*', controllers.upload.getImage)
+router.get('/public/upload/*', controllers.upload.getImage)
 
 router.post('/updatePublicNumber', controllers.publicNumber.updatePublicNumber)
 
