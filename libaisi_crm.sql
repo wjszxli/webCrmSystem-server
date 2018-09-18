@@ -159,7 +159,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `cUser`;
 CREATE TABLE `cUser` (
-  `idcUser` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   `phone` varchar(45) NOT NULL,
   `dept` varchar(45) DEFAULT NULL,
@@ -167,7 +167,7 @@ CREATE TABLE `cUser` (
   `remark` varchar(45) DEFAULT NULL,
   `pwd` varchar(45) NOT NULL,
   `openId` varchar(45) NOT NULL,
-  PRIMARY KEY (`idcUser`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------

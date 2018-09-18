@@ -5,12 +5,10 @@ const mysql = require('../utils/mysql')
 const fs = require('fs'); // 图片路径
 
 const mkdirs = (dirname, callback) => {
-    console.log('dirname1', dirname)
     fs.exists(dirname, function (exists) {
         if (exists) {
             callback();
         } else {
-            console.log('dirname2', path.dirname(dirname))
             mkdirs(path.dirname(dirname), function () {
                 fs.mkdir(dirname, callback);
             });
@@ -31,10 +29,7 @@ module.exports.uploadImage = async (ctx, next) => {
                     fields,
                     files
                 }) => {
-                    let url = fields.url;
-                    let articleId = fields.articleId;
                     let filename = files.file.name;
-                    console.log(files.file.path);
                     let uploadDir = 'public/upload/';
                     let avatarName = Date.now() + '_' + filename;
                     mkdirs('public/upload', function () {
@@ -72,11 +67,9 @@ module.exports.uploadImage = async (ctx, next) => {
 
 module.exports.getImage = async (ctx, next) => {
     try {
-        console.log('wjszxli')
         const url = ctx.request.path.replace('/api','')
         const staticPath = '../' + url
         const data = fs.readFileSync(path.join(__dirname, staticPath))
-        console.log('path.join(__dirname, staticPath)', path.join(__dirname, staticPath))
         ctx.set('Content-Type', 'image/png')
         ctx.body = data
     } catch (error) {

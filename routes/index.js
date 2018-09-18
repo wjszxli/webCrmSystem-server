@@ -87,6 +87,8 @@ router.get('/getDept', controllers.dept.getDept)
 
 router.get('/getDeptCount', controllers.dept.getDeptCount)
 
+router.get('/getAllUserInfo', controllers.user.getAllUserInfo)
+
 // 处理404
 // router.post('*', controllers.error.notFind)
 // router.get('*', controllers.error.notFind)

@@ -1,5 +1,7 @@
 const mysql = require('../utils/mysql')
-const { isLogin } = require('../utils/util')
+const {
+    isLogin
+} = require('../utils/util')
 const {
     response,
     md5
@@ -12,7 +14,8 @@ module.exports.saveUserInfo = async (ctx, next) => {
             phone, // 手机号码
             dept,
             job, // 职位
-            remark
+            remark,
+            isDeptAdmin
         } = ctx.request.body
 
         const pwd = md5('123456')
@@ -25,7 +28,8 @@ module.exports.saveUserInfo = async (ctx, next) => {
                 name, // 姓名
                 dept,
                 job, // 职位
-                remark
+                remark,
+                isdeptadmin: isDeptAdmin
             }).where({
                 phone
             })
@@ -57,8 +61,17 @@ module.exports.getUserInfo = async (ctx, next) => {
             pageIndex,
             pageSize
         } = ctx.request.query
-        let res = await mysql('cUser').limit(pageSize).offset((pageIndex - 1) * pageSize).orderBy('idcUser')
+        let res = await mysql('cUser').limit(pageSize).offset((pageIndex - 1) * pageSize).orderBy('id')
         ctx.body = ctx.body = response('0', res)
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+module.exports.getAllUserInfo = async (ctx, next) => {
+    try {
+        const res = await mysql('cUser')
+        ctx.state.data = res
     } catch (error) {
         throw new Error(error)
     }
@@ -66,7 +79,7 @@ module.exports.getUserInfo = async (ctx, next) => {
 
 module.exports.getUserCount = async (ctx, next) => {
     try {
-        let res = await mysql('cUser').count('idcUser as count')
+        let res = await mysql('cUser').count('id as count')
         ctx.body = ctx.body = response('0', res)
     } catch (error) {
         throw new Error(error)
@@ -76,10 +89,10 @@ module.exports.getUserCount = async (ctx, next) => {
 module.exports.deleteUser = async (ctx, next) => {
     try {
         const {
-            idcUser
+            id
         } = ctx.request.body
 
-        await mysql('cUser').where('idcUser', idcUser)
+        await mysql('cUser').where('id', id)
             .del()
         ctx.body = response('0', {
             tip: '删除成功'
@@ -92,7 +105,7 @@ module.exports.deleteUser = async (ctx, next) => {
 module.exports.modifyPwd = async (ctx, next) => {
     try {
         const {
-            idcUser,
+            id,
             oldpwd,
             newpwd
         } = ctx.request.body
@@ -104,7 +117,7 @@ module.exports.modifyPwd = async (ctx, next) => {
         openId = md5(openId)
 
         let res = await mysql('cUser').count('phone as hasUser').where({
-            idcUser,
+            id,
             pwd: oldPassword
         })
 
@@ -113,7 +126,7 @@ module.exports.modifyPwd = async (ctx, next) => {
                 pwd: newPassword,
                 openId
             }).where({
-                idcUser,
+                id,
                 pwd: oldPassword,
             })
             ctx.body = response('0', {
@@ -133,10 +146,10 @@ module.exports.modifyPwd = async (ctx, next) => {
 module.exports.getOneUser = async (ctx, next) => {
     try {
         let {
-            idcUser
+            id
         } = ctx.request.query
         const res = await mysql('cUser').where({
-            idcUser
+            id
         })
         ctx.state.data = res
     } catch (error) {
@@ -153,7 +166,7 @@ module.exports.login = async (ctx, next) => {
 
         password = md5(password)
 
-        const res = await mysql('cUser').select('name','phone','dept','job','openId').where({
+        const res = await mysql('cUser').select('name', 'phone', 'dept', 'job', 'openId').where({
             phone,
             pwd: password
         })
