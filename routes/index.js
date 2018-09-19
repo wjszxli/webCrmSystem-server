@@ -79,15 +79,19 @@ router.get('/public/upload/*', controllers.upload.getImage)
 
 router.post('/updatePublicNumber', controllers.publicNumber.updatePublicNumber)
 
-// router.get('/getAuthor', controllers.author.getAuthor)
+router.get('/getAuthor', controllers.author.getAuthor)
 
-// router.get('/getAuthorCount', controllers.author.getAuthorCount)
+router.get('/getAuthorCount', controllers.author.getAuthorCount)
 
 router.get('/getDept', controllers.dept.getDept)
 
 router.get('/getDeptCount', controllers.dept.getDeptCount)
 
 router.get('/getAllUserInfo', controllers.user.getAllUserInfo)
+
+router.post('/updateAuthor', controllers.author.updateAuthor)
+
+router.get('/isAuthor', controllers.author.isAuthor)
 
 // 处理404
 // router.post('*', controllers.error.notFind)

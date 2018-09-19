@@ -166,7 +166,7 @@ module.exports.login = async (ctx, next) => {
 
         password = md5(password)
 
-        const res = await mysql('cUser').select('name', 'phone', 'dept', 'job', 'openId').where({
+        const res = await mysql('cUser').select('name', 'phone', 'dept', 'job', 'openId', 'id').where({
             phone,
             pwd: password
         })
