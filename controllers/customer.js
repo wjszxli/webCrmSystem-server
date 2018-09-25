@@ -10,7 +10,8 @@ module.exports.saveCustomer = async (ctx, next) => {
             webchat,
             qq,
             isCollaborate,
-            people
+            people,
+            userId
         } = ctx.request.body
 
         await mysql('cCustomer').insert({
@@ -21,7 +22,8 @@ module.exports.saveCustomer = async (ctx, next) => {
             webchat,
             qq,
             isCollaborate,
-            people
+            people,
+            userid:userId
         })
         ctx.state.data = {
             tip: '保存成功'
@@ -39,7 +41,9 @@ module.exports.getCustomer = async (ctx, next) => {
             isDelete,
             customer,
             people,
-            isCollaborate
+            isCollaborate,
+            tag,
+            userId
         } = ctx.request.query
 
         const searchData = {}
@@ -58,6 +62,19 @@ module.exports.getCustomer = async (ctx, next) => {
             .where(function () {
                 if (customer) {
                     this.where('companyName', 'like', `%${customer}%`).orWhere('brand', 'like', `%${customer}%`)
+                }
+                if (tag && tag !== 'all') {
+                    if (tag === 'self') {
+                        this.where('userid', '=', userId)
+                    } else if (tag === 'dept') {
+                        this.whereIn('userid', function(){
+                            this.select('id').from('cUser').whereIn('dept',function(){
+                                this.select('dept').from('cUser').where({
+                                    id: userId
+                                })
+                            })
+                        })
+                    }
                 }
             })
 

@@ -17,6 +17,8 @@ module.exports.isLogin = async (ctx, next) => {
     const {
         openid
     } = ctx.header
+
+    console.log('wwww', ctx.header)
     const data = await mysql('cUser').where({
         openId: openid
     })

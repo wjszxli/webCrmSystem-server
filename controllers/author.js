@@ -56,7 +56,11 @@ module.exports.isAuthor = async (ctx, next) => {
         if (res.length) {
             if (res[0].user) {
                 const userData = res[0].user.split(',')
+
                 const isAuth = userData.findIndex(v => v === user)
+                console.log('res', user)
+                console.log('isAuth', isAuth)
+
                 if (isAuth !== -1) {
                     tip = 1
                 }
@@ -70,12 +74,12 @@ module.exports.isAuthor = async (ctx, next) => {
     }
 }
 
-module.exports.getOneCustomer = async (ctx, next) => {
+module.exports.getDataById = async (ctx, next) => {
     try {
         const {
             id
         } = ctx.request.query
-        res = await mysql('cCustomer').where({
+        res = await mysql('cAuthor').where({
             id
         })
         ctx.state.data = res

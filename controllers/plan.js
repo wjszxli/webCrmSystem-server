@@ -19,7 +19,8 @@ module.exports.savePlan = async (ctx, next) => {
             publicNumberId,
             planPeople,
             customer,
-            customerName
+            customerName,
+            userId
         } = ctx.request.body
         
         await mysql('cPlan').insert({
@@ -36,7 +37,8 @@ module.exports.savePlan = async (ctx, next) => {
             remark,
             publicnumberid: publicNumberId,
             planpeople: planPeople,
-            customername: customerName
+            customername: customerName,
+            userid: userId
         })
         
         if (publicNumberId) {
@@ -75,7 +77,9 @@ module.exports.getPlan = async (ctx, next) => {
             isPay,
             remark,
             startTime,
-            endTime
+            endTime,
+            tag,
+            userId
         } = ctx.request.query
 
         const searchData = {}
@@ -107,7 +111,20 @@ module.exports.getPlan = async (ctx, next) => {
                 if (endTime) {
                     this.where('createTime', '<', endTime)
                 }
-            })
+                if (tag && tag !== 'all') {
+                    if (tag === 'self') {
+                        this.where('userid', '=', userId)
+                    } else if (tag === 'dept') {
+                        this.whereIn('userid', function(){
+                            this.select('id').from('cUser').whereIn('dept',function(){
+                                this.select('dept').from('cUser').where({
+                                    id: userId
+                                })
+                            })
+                        })
+                    }
+                }
+            }).orderBy('createTime', 'desc')
         ctx.state.data = res
     } catch (error) {
         throw new Error(error)
@@ -124,7 +141,9 @@ module.exports.getPlanCount = async (ctx, next) => {
             isPay,
             remark,
             startTime,
-            endTime
+            endTime,
+            tag,
+            userId
         } = ctx.request.query
 
         const searchData = {}
@@ -156,6 +175,19 @@ module.exports.getPlanCount = async (ctx, next) => {
                 }
                 if (endTime) {
                     this.where('createTime', '<', endTime)
+                }
+                if (tag && tag !== 'all') {
+                    if (tag === 'self') {
+                        this.where('userid', '=', userId)
+                    } else if (tag === 'dept') {
+                        this.whereIn('userid', function(){
+                            this.select('id').from('cUser').whereIn('dept',function(){
+                                this.select('dept').from('cUser').where({
+                                    id: userId
+                                })
+                            })
+                        })
+                    }
                 }
             })
         ctx.state.data = res

@@ -19,7 +19,9 @@ module.exports.savePublicNumber = async (ctx, next) => {
             womenRatio,
             operation,
             brush,
-            type
+            type,
+            updateRouter,
+            userId
         } = ctx.request.body
         if (dataId) {
             if (operation === 'add') {
@@ -34,6 +36,8 @@ module.exports.savePublicNumber = async (ctx, next) => {
                     lasttitle: lastTitle,
                     lastcost: lastCost,
                     womenratio: womenRatio,
+                    updaterouter: updateRouter,
+                    userid:userId,
                     type,
                     brush
                 })
@@ -48,6 +52,8 @@ module.exports.savePublicNumber = async (ctx, next) => {
                     lasttitle: lastTitle,
                     lastcost: lastCost,
                     womenratio: womenRatio,
+                    updaterouter: updateRouter,
+                    userid:userId,
                     brush,
                     type
                 }).where({
@@ -234,7 +240,8 @@ module.exports.updatePublicNumber = async (ctx, next) => {
             lastCost,
             womenRatio,
             brush,
-            type
+            type,
+            updateRouter
         } = ctx.request.body
         if (id) {
             await mysql('cPublicNumber')
@@ -249,7 +256,7 @@ module.exports.updatePublicNumber = async (ctx, next) => {
                 lasttitle: lastTitle,
                 lastcost: lastCost,
                 womenratio: womenRatio,
-                updateRouter: '平台',
+                updateRouter: updateRouter,
                 brush,
                 type
             }).where({
