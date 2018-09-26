@@ -34,7 +34,7 @@ module.exports.saveUserInfo = async (ctx, next) => {
                 phone
             })
         } else {
-            let openId = `123456${new Date().getTime()}${phone}`
+            let openId = `123456${new Date().getTime()}`
             openId = md5(openId)
             res = await mysql('cUser').insert({
                 name, // 姓名
@@ -112,8 +112,9 @@ module.exports.modifyPwd = async (ctx, next) => {
 
         const newPassword = md5(newpwd)
         const oldPassword = md5(oldpwd)
+        console.log('oldPassword', oldPassword)
 
-        let openId = newpwd + new Date().getTime() + phone
+        let openId = newpwd + new Date().getTime()
         openId = md5(openId)
 
         let res = await mysql('cUser').count('phone as hasUser').where({
