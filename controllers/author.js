@@ -58,9 +58,6 @@ module.exports.isAuthor = async (ctx, next) => {
                 const userData = res[0].user.split(',')
 
                 const isAuth = userData.findIndex(v => v === user)
-                console.log('res', user)
-                console.log('isAuth', isAuth)
-
                 if (isAuth !== -1) {
                     tip = 1
                 }

@@ -1,6 +1,6 @@
 const Koa = require('koa')
 const app = new Koa()
-// const debug = require('debug')('crm-server')
+const debug = require('debug')('crm-server')
 const path = require('path')
 const cors = require('koa2-cors');
 const response = require('./middlewares/response')
@@ -24,4 +24,4 @@ const router = require('./routes')
 app.use(router.routes())
 
 // 启动程序，监听端口
-app.listen(config.port, () => (`listening on port ${config.port}`))
+app.listen(config.port, () => debug(`listening on port ${config.port}`))
