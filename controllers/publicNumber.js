@@ -27,8 +27,7 @@ module.exports.savePublicNumber = async (ctx, next) => {
       const res = await mysql('cPublicNumber').where({
         dataid: dataId
       })
-      console.log('=========res', res);
-
+      const updateTime = new Date()
       if (res.length === 0) {
         await mysql('cPublicNumber').insert({
           name,
@@ -43,6 +42,7 @@ module.exports.savePublicNumber = async (ctx, next) => {
           womenratio: womenRatio,
           updaterouter: updateRouter,
           userid: userId,
+          updatetime:updateTime,
           type,
           brush
         })
