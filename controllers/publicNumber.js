@@ -21,14 +21,15 @@ module.exports.savePublicNumber = async (ctx, next) => {
       brush,
       type,
       updateRouter,
-      userId
+      userId,
+      remark
     } = ctx.request.body
-    if (operation === 'add' && dataId) {
+    if (operation === 'add') {
       const res = await mysql('cPublicNumber').where({
         dataid: dataId
       })
       const updateTime = new Date()
-      if (res.length === 0) {
+      if (res.length === 0 || !dataId) {
         await mysql('cPublicNumber').insert({
           name,
           dataid: dataId,
@@ -44,7 +45,8 @@ module.exports.savePublicNumber = async (ctx, next) => {
           userid: userId,
           updatetime:updateTime,
           type,
-          brush
+          brush,
+          remark
         })
       }
     } else if (operation === 'update') {
@@ -61,7 +63,8 @@ module.exports.savePublicNumber = async (ctx, next) => {
         updaterouter: updateRouter,
         userid: userId,
         brush,
-        type
+        type,
+        remark
       }).where({
         dataid: dataId
       })
