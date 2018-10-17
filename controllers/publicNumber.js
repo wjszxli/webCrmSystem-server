@@ -25,9 +25,12 @@ module.exports.savePublicNumber = async (ctx, next) => {
       remark
     } = ctx.request.body
     if (operation === 'add') {
-      const res = await mysql('cPublicNumber').where({
-        dataid: dataId
-      })
+      let res = []
+      if (dataId) {
+        res = await mysql('cPublicNumber').where({
+          dataid: dataId
+        })
+      }
       const updateTime = new Date()
       if (res.length === 0 || !dataId) {
         await mysql('cPublicNumber').insert({
