@@ -201,6 +201,10 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
           }
         })
     }
+    console.log('=========tag',tag);
+    
+    console.log('=========res',res);
+    
     ctx.state.data = res
   } catch (error) {
     throw new Error(error)
@@ -288,7 +292,8 @@ module.exports.updatePublicNumber = async (ctx, next) => {
       womenRatio,
       brush,
       type,
-      updateRouter
+      updateRouter,
+      remark
     } = ctx.request.body
     const res = await mysql('cPublicNumber').where({
       id
@@ -312,6 +317,7 @@ module.exports.updatePublicNumber = async (ctx, next) => {
         lastcost: lastCost,
         womenratio: womenRatio,
         updateRouter: updateRouter,
+        remark,
         brush,
         type
       }
