@@ -107,7 +107,7 @@ module.exports.getPublicNumber = async (ctx, next) => {
         .where(searchData)
         .where(function() {
           if (publicNumber) {
-            this.where('name', 'like', `%${publicNumber}%`)
+            this.where('name', 'like', `%${publicNumber}%`).orWhere('dataId', '=', publicNumber)
           }
           if (starS) {
             this.where('star', '>', starS)
@@ -200,11 +200,7 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
             }
           }
         })
-    }
-    console.log('=========tag',tag);
-    
-    console.log('=========res',res);
-    
+    }        
     ctx.state.data = res
   } catch (error) {
     throw new Error(error)
