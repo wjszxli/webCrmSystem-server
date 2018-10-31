@@ -209,21 +209,14 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
 
 module.exports.deletePublicNumber = async (ctx, next) => {
   try {
-    isLogin(ctx, next)
+    isLogin(ctx, next)    
     const {
-      id,
-      isDelete
-    } = ctx.request.body
-    console.log('isDelete', isDelete)
-    res = await mysql('cCustomer').update({
-      isDelete
-    }).where({
       id
-    })
-    let tip = '捡起成功'
-    if (isDelete) {
-      tip = '删除成功'
-    }
+    } = ctx.request.query
+    const res = await mysql('cPublicNumber').where({
+      id
+    }).del()
+    const tip = '删除成功'
     ctx.state.data = {
       tip
     }
