@@ -46,7 +46,7 @@ module.exports.savePublicNumber = async (ctx, next) => {
           womenratio: womenRatio,
           updaterouter: updateRouter,
           userid: userId,
-          updatetime:updateTime,
+          updatetime: updateTime,
           type,
           brush,
           remark
@@ -200,7 +200,7 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
             }
           }
         })
-    }        
+    }
     ctx.state.data = res
   } catch (error) {
     throw new Error(error)
@@ -209,7 +209,7 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
 
 module.exports.deletePublicNumber = async (ctx, next) => {
   try {
-    isLogin(ctx, next)    
+    isLogin(ctx, next)
     const {
       id
     } = ctx.request.query
@@ -315,6 +315,29 @@ module.exports.updatePublicNumber = async (ctx, next) => {
       }
       await mysql('cPublicNumber')
         .update(updateObj).where({
+          id
+        })
+    }
+    ctx.state.data = {
+      tip: '修改成功'
+    }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+module.exports.updateImg = async (ctx, next) => {
+  // starImage
+  try {
+    const {
+      starImage,
+      id
+    } = ctx.request.body
+    if (id) {
+      await mysql('cPublicNumber')
+        .update({
+          starImage
+        }).where({
           id
         })
     }

@@ -98,6 +98,8 @@ router.get('/getDataById', controllers.author.getDataById)
 router.post('/updatePlan', controllers.plan.updatePlan)
 
 router.post('/deletePublicNumber', controllers.publicNumber.deletePublicNumber)
+
+router.post('/updateImg', controllers.publicNumber.updateImg)
 // 处理404
 // router.post('*', controllers.error.notFind)
 // router.get('*', controllers.error.notFind)
