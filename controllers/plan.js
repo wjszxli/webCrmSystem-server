@@ -92,7 +92,12 @@ module.exports.getPlan = async (ctx, next) => {
       searchData.isDelete = isDelete
     }
     if (planPeople) {
-      searchData.planPeople = planPeople
+      const data = await mysql('cUser').where({
+        id:planPeople
+      })      
+      if (data.length) {
+        searchData.planPeople = data[0].name
+      }      
     }
     if (isBack) {
       searchData.isBack = isBack
