@@ -185,7 +185,7 @@ INSERT INTO `cPublicNumber` VALUES (69, '胖少女晚托班', 'babyfatlady_1987'
 INSERT INTO `cPublicNumber` VALUES (70, '三个妈妈六个娃', 'pkumum', 200000, '35000', '30000', '/', '/', '/', '/', '63', 0, '媒介测试', '教育亲子', '不刷', NULL, NULL, '21', NULL);
 INSERT INTO `cPublicNumber` VALUES (71, '花姐小食光', 'totyummy', 100000, '18000', '16,000', '/', '/', '/', '/', '64', 2, '媒介测试', '教育亲子', '半刷', NULL, NULL, '22', NULL);
 INSERT INTO `cPublicNumber` VALUES (72, '家长家', 'jiazhanghome', 830000, '38000', '35000', NULL, '13000', '/', '/', '65', 0, '媒介测试', '教育亲子', '半刷', NULL, NULL, '22', NULL);
-INSERT INTO `cPublicNumber` VALUES (73, '中小学阅读吧', 'jiazhangbest', 350000, '15000', '12000', '/', '/', '/', '/', '66', 0, '媒介测试', '教育亲子', '半刷', NULL, NULL, '22', NULL);
+INSERT INTO `cPublicNumber` VALUES (73, '中小学阅读吧', 'jiazhangbest', 350000, '15000', '12000', '/', '/', '/', '/', '66', 0, '媒介测试', '其他', '半刷', NULL, NULL, '22', NULL);
 INSERT INTO `cPublicNumber` VALUES (74, '伊姐看电影', 'eemovie', 760000, '65000', '60000', '/', '32000', '/', '/', '68', 0, '媒介测试', 'kol', '全刷', NULL, NULL, '22', NULL);
 COMMIT;
 
