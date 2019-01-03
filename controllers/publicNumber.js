@@ -95,6 +95,8 @@ module.exports.getPublicNumber = async (ctx, next) => {
       womenRatioE,
       tag,
       userId,
+      priceS,
+      priceE
     } = ctx.request.query
     const searchData = {}
 
@@ -119,7 +121,13 @@ module.exports.getPublicNumber = async (ctx, next) => {
             this.where('womenRatio', '>', womenRatioS)
           }
           if (womenRatioE) {
-            this.where('womenRatio', '>', womenRatioE)
+            this.where('womenRatio', '<', womenRatioE)
+          }
+          if (priceS){
+            this.where('topCost', '>', priceS)
+          }
+          if (priceE) {
+            this.where('topCost', '>', priceS)
           }
           if (brush) {
             this.where('brush', '=', brush)
@@ -137,7 +145,7 @@ module.exports.getPublicNumber = async (ctx, next) => {
               })
             }
           }
-        })
+        }).orderBy('updateTime', 'desc')
     }
     ctx.state.data = res
 
@@ -184,7 +192,13 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
             this.where('womenRatio', '>', womenRatioS)
           }
           if (womenRatioE) {
-            this.where('womenRatio', '>', womenRatioE)
+            this.where('womenRatio', '<', womenRatioE)
+          }
+          if (priceS){
+            this.where('topCost', '>', priceS)
+          }
+          if (priceE) {
+            this.where('topCost', '>', priceS)
           }
           if (tag && tag !== 'all') {
             if (tag === 'self') {
