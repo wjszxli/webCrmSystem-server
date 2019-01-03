@@ -166,6 +166,8 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
       womenRatioE,
       tag,
       userId,
+      priceS,
+      priceE
     } = ctx.request.query
     const searchData = {}
 
