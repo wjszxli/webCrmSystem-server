@@ -127,7 +127,7 @@ module.exports.getPublicNumber = async (ctx, next) => {
             this.where('topCost', '>', priceS)
           }
           if (priceE) {
-            this.where('topCost', '>', priceS)
+            this.where('topCost', '<', priceS)
           }
           if (brush) {
             this.where('brush', '=', brush)
@@ -200,7 +200,7 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
             this.where('topCost', '>', priceS)
           }
           if (priceE) {
-            this.where('topCost', '>', priceS)
+            this.where('topCost', '<', priceS)
           }
           if (tag && tag !== 'all') {
             if (tag === 'self') {
