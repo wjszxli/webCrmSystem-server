@@ -6,7 +6,7 @@ const CONF = {
         port: 3306,
         user: 'root',
         db: 'libaisi_crm',
-        pass: '1234qwer',
+        pass: 'qwer123456',
         char: 'utf8mb4'
     }
 }
