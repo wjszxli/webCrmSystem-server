@@ -96,9 +96,14 @@ module.exports.getPublicNumber = async (ctx, next) => {
       tag,
       userId,
       priceS,
-      priceE
+      priceE,
+      order,
+      updateRouter,
+      remark
     } = ctx.request.query
     const searchData = {}
+    const searchOrder = order ? order : 'updateTime'
+
 
     if (type) {
       searchData.type = type
@@ -110,6 +115,12 @@ module.exports.getPublicNumber = async (ctx, next) => {
         .where(function() {
           if (publicNumber) {
             this.where('name', 'like', `%${publicNumber}%`).orWhere('dataId', '=', publicNumber)
+          }
+          if (remark) {
+            this.where('remark', 'like', `%${remark}%`)
+          }
+          if (updateRouter) {
+            this.where('updateRouter', '=', updateRouter)
           }
           if (starS) {
             this.where('star', '>', starS)
@@ -124,10 +135,10 @@ module.exports.getPublicNumber = async (ctx, next) => {
             this.where('womenRatio', '<', womenRatioE)
           }
           if (priceS){
-            this.where('topCost', '>', priceS)
+            this.where('topCost', '>', Number(priceS))
           }
           if (priceE) {
-            this.where('topCost', '<', priceE)
+            this.where('topCost', '<', Number(priceE))
           }
           if (brush) {
             this.where('brush', '=', brush)
@@ -145,7 +156,7 @@ module.exports.getPublicNumber = async (ctx, next) => {
               })
             }
           }
-        }).orderBy('updateTime', 'desc')
+        }).orderBy(searchOrder, 'desc')
     }
     ctx.state.data = res
 
@@ -167,7 +178,9 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
       tag,
       userId,
       priceS,
-      priceE
+      priceE,
+      remark,
+      updateRouter
     } = ctx.request.query
     const searchData = {}
 
@@ -184,6 +197,12 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
           if (publicNumber) {
             this.where('name', 'like', `%${publicNumber}%`)
           }
+          if (remark) {
+            this.where('remark', 'like', `%${remark}%`)
+          }
+          if (updateRouter) {
+            this.where('updateRouter', '=', updateRouter)
+          }
           if (starS) {
             this.where('star', '>', starS)
           }
@@ -197,10 +216,10 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
             this.where('womenRatio', '<', womenRatioE)
           }
           if (priceS){
-            this.where('topCost', '>', priceS)
+            this.where('topCost', '>', Number(priceS))
           }
           if (priceE) {
-            this.where('topCost', '<', priceE)
+            this.where('topCost', '<', Number(priceE))
           }
           if (tag && tag !== 'all') {
             if (tag === 'self') {

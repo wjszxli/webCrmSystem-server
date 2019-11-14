@@ -22,8 +22,11 @@ module.exports.savePlan = async (ctx, next) => {
       customerName,
       userId,
       impost,
-      channelImpost
+      channelImpost,
+      rebate
     } = ctx.request.body
+
+    console.log('rebate', rebate)
 
     await mysql('cPlan').insert({
       publicnumber: publicNumber,
@@ -42,7 +45,8 @@ module.exports.savePlan = async (ctx, next) => {
       customername: customerName,
       userid: userId,
       impost,
-      channelimpost: channelImpost
+      channelimpost: channelImpost,
+      rebate
     })
 
     if (publicNumberId) {
@@ -84,6 +88,10 @@ module.exports.getPlan = async (ctx, next) => {
       tag,
       userId,
       financeReamrk,
+      inTimeStartTime,
+      inTimeEndTime,
+      backTimeStartTime,
+      backTimeEndTime
     } = ctx.request.query
 
     const searchData = {}
@@ -126,6 +134,10 @@ module.exports.getPlan = async (ctx, next) => {
           if (endTime) {
             this.where('createTime', '<', endTime)
           }
+          inTimeStartTime,
+          inTimeEndTime,
+          backTimeStartTime,
+          backTimeEndTime
           if (tag && tag !== 'all') {
             if (tag === 'self') {
               this.where('userid', '=', userId)
@@ -265,15 +277,19 @@ module.exports.updatePlanBack = async (ctx, next) => {
       type
     } = ctx.request.body
 
+    let backTime = new Date().getTime()
+
     if (type === 1) {
       type = 0
+      backTime = ''
     } else if (type === 0) {
       type = 1
     }
 
     if (ids.length > 0) {
       res = await mysql('cPlan').update({
-        isBack: type
+        isBack: type,
+        backTime
       }).whereIn('id', ids)
     }
     const tip = '操作成功'
@@ -300,7 +316,7 @@ module.exports.updatePlanPay = async (ctx, next) => {
 
     if (ids.length > 0) {
       res = await mysql('cPlan').update({
-        isPay: type
+        isPay: type,
       }).whereIn('id', ids)
     }
     const tip = '操作成功'
