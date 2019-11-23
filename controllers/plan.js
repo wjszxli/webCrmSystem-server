@@ -120,7 +120,7 @@ module.exports.getPlan = async (ctx, next) => {
         .where(function() {
           if (publicNumber) {
             this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
-            .orWhere('customerName', 'like', `%${publicNumber}`)
+            .orWhere('customerName', 'like', `%${publicNumber}%`)
           }
           if (remark) {
             this.where('remark', 'like', `%${remark}%`)
@@ -129,15 +129,29 @@ module.exports.getPlan = async (ctx, next) => {
             this.where('financeReamrk', 'like', `%${financeReamrk}%`)
           }
           if (startTime) {
-            this.where('createTime', '>', startTime)
+            this.where('createTime', '>=', startTime)
           }
           if (endTime) {
-            this.where('createTime', '<', endTime)
+            this.where('createTime', '<=', endTime)
           }
-          inTimeStartTime,
-          inTimeEndTime,
-          backTimeStartTime,
-          backTimeEndTime
+          if (inTimeStartTime) {
+            let startTime = `${new Date(inTimeStartTime).getTime()}`
+            startTime = startTime.substr(0, startTime.length - 3)
+            this.where('inTime', '>=', startTime)
+          }
+          if (inTimeEndTime) {
+            let endTime = `${new Date(inTimeEndTime).getTime()}`
+            endTime = endTime.substr(0, endTime.length - 3)
+            this.where('inTime', '<=', endTime)
+          }
+          if (backTimeStartTime) {
+            const startTime = new Date(backTimeStartTime).getTime()
+            this.where('backTime', '>=', startTime)
+          }
+          if (backTimeEndTime) {
+            const endTime = new Date(backTimeEndTime).getTime()
+            this.where('backTime', '<=', endTime)
+          }
           if (tag && tag !== 'all') {
             if (tag === 'self') {
               this.where('userid', '=', userId)
@@ -165,11 +179,18 @@ module.exports.getPlan = async (ctx, next) => {
   }
 }
 
+module.exports.getPlanAll = async (ctx, next) => {
+  try {
+    const res = await mysql('cPlan')
+    ctx.state.data = res
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 module.exports.getPlanCount = async (ctx, next) => {
   try {
     const {
-      pageIndex,
-      pageSize,
       isDelete,
       publicNumber,
       planPeople,
@@ -181,6 +202,10 @@ module.exports.getPlanCount = async (ctx, next) => {
       tag,
       userId,
       financeReamrk,
+      inTimeStartTime,
+      inTimeEndTime,
+      backTimeStartTime,
+      backTimeEndTime
     } = ctx.request.query
 
     const searchData = {}
@@ -212,16 +237,37 @@ module.exports.getPlanCount = async (ctx, next) => {
         .where(function() {
           if (publicNumber) {
             this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
-            .orWhere('customerName', 'like', `%${publicNumber}`)
+            .orWhere('customerName', 'like', `%${publicNumber}%`)
           }
           if (remark) {
             this.where('remark', 'like', `%${remark}%`)
           }
           if (startTime) {
-            this.where('createTime', '>', startTime)
+            this.where('createTime', '>=', startTime)
           }
           if (endTime) {
-            this.where('createTime', '<', endTime)
+            this.where('createTime', '<=', endTime)
+          }
+          if (financeReamrk) {
+            this.where('financeReamrk', 'like', `%${financeReamrk}%`)
+          }
+          if (inTimeStartTime) {
+            let startTime = `${new Date(inTimeStartTime).getTime()}`
+            startTime = startTime.substr(0, startTime.length - 3)
+            this.where('inTime', '>=', startTime)
+          }
+          if (inTimeEndTime) {
+            let endTime = `${new Date(inTimeEndTime).getTime()}`
+            endTime = endTime.substr(0, endTime.length - 3)
+            this.where('inTime', '<=', endTime)
+          }
+          if (backTimeStartTime) {
+            const startTime = new Date(backTimeStartTime).getTime()
+            this.where('backTime', '>=', startTime)
+          }
+          if (backTimeEndTime) {
+            const endTime = new Date(backTimeEndTime).getTime()
+            this.where('backTime', '<=', endTime)
           }
           if (tag && tag !== 'all') {
             if (tag === 'self') {

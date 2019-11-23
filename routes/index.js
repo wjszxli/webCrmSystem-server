@@ -53,6 +53,8 @@ router.post('/savePlan', controllers.plan.savePlan)
 
 router.get('/getPlan', controllers.plan.getPlan)
 
+router.get('/getPlanAll', controllers.plan.getPlanAll)
+
 router.get('/getPlanCount', controllers.plan.getPlanCount)
 
 router.post('/deletePlan', controllers.plan.deletePlan)
