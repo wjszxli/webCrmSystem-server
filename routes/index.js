@@ -55,6 +55,8 @@ router.get('/getPlan', controllers.plan.getPlan)
 
 router.get('/getPlanAll', controllers.plan.getPlanAll)
 
+router.get('/getPlanAllSum', controllers.plan.getPlanAllSum)
+
 router.get('/getPlanCount', controllers.plan.getPlanCount)
 
 router.post('/deletePlan', controllers.plan.deletePlan)

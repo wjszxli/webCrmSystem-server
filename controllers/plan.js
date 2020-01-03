@@ -1,4 +1,6 @@
 const mysql = require('../utils/mysql')
+const math = require('mathjs')
+
 const {
   response
 } = require('../utils/util')
@@ -182,6 +184,30 @@ module.exports.getPlan = async (ctx, next) => {
 module.exports.getPlanAll = async (ctx, next) => {
   try {
     const res = await mysql('cPlan')
+    ctx.state.data = res
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+module.exports.getPlanAllSum = async (ctx, next) => {
+  try {
+    const res = await mysql('cPlan').select(['price','cost','impost','channelImpost','rebate'])
+
+    let price = 0
+    let cost = 0
+    let profit = 0
+    res.forEach(item => {
+      price = math.chain(price).add(Number(item.price))
+      cost = math.chain(cost).add(Number(item.cost))
+
+      // const profit = Number(item.price) - Number(item.cost) - Number(item.impost) + Number(item.channelImpost) - Number(item.rebate)
+      // profit = math.chain(profit).add((math.chain(Number(item.price)).subtract(Number(item.cost)) ))
+
+    })
+    const ttt = math.chain(100).subtract(10)
+    console.log('ttt', ttt)
+    console.log('price', price)
     ctx.state.data = res
   } catch (error) {
     throw new Error(error)
