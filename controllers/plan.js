@@ -103,11 +103,11 @@ module.exports.getPlan = async (ctx, next) => {
     }
     if (planPeople) {
       const data = await mysql('cUser').where({
-        id:planPeople
-      })      
+        id: planPeople
+      })
       if (data.length) {
         searchData.planPeople = data[0].name
-      }      
+      }
     }
     if (isBack) {
       searchData.isBack = isBack
@@ -119,10 +119,10 @@ module.exports.getPlan = async (ctx, next) => {
     if (tag) {
       res = await mysql('cPlan').limit(pageSize).offset((pageIndex - 1) * pageSize)
         .where(searchData)
-        .where(function() {
+        .where(function () {
           if (publicNumber) {
             this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
-            .orWhere('customerName', 'like', `%${publicNumber}%`)
+              .orWhere('customerName', 'like', `%${publicNumber}%`)
           }
           if (remark) {
             this.where('remark', 'like', `%${remark}%`)
@@ -158,15 +158,15 @@ module.exports.getPlan = async (ctx, next) => {
             if (tag === 'self') {
               this.where('userid', '=', userId)
             } else if (tag === 'dept') {
-              this.whereIn('userid', function() {
-                this.select('id').from('cUser').whereIn('dept', function() {
+              this.whereIn('userid', function () {
+                this.select('id').from('cUser').whereIn('dept', function () {
                   this.select('dept').from('cUser').where({
                     id: userId
                   })
                 })
               })
             } else if (tag === 'medium') {
-              this.whereIn('publicNumberId', function() {
+              this.whereIn('publicNumberId', function () {
                 this.select('id').from('cPublicNumber').where({
                   userid: userId
                 })
@@ -191,24 +191,117 @@ module.exports.getPlanAll = async (ctx, next) => {
 }
 
 module.exports.getPlanAllSum = async (ctx, next) => {
-  try {
-    const res = await mysql('cPlan').select(['price','cost','impost','channelImpost','rebate'])
+  const {
+    isDelete,
+    publicNumber,
+    planPeople,
+    isBack,
+    isPay,
+    remark,
+    startTime,
+    endTime,
+    tag,
+    userId,
+    financeReamrk,
+    inTimeStartTime,
+    inTimeEndTime,
+    backTimeStartTime,
+    backTimeEndTime
+  } = ctx.request.query
 
-    let price = 0
-    let cost = 0
-    let profit = 0
-    res.forEach(item => {
-      price = math.chain(price).add(Number(item.price))
-      cost = math.chain(cost).add(Number(item.cost))
+  const searchData = {}
 
-      // const profit = Number(item.price) - Number(item.cost) - Number(item.impost) + Number(item.channelImpost) - Number(item.rebate)
-      // profit = math.chain(profit).add((math.chain(Number(item.price)).subtract(Number(item.cost)) ))
-
+  if (isDelete) {
+    searchData.isDelete = isDelete
+  }
+  if (planPeople) {
+    const data = await mysql('cUser').where({
+      id: planPeople
     })
-    const ttt = math.chain(100).subtract(10)
-    console.log('ttt', ttt)
-    console.log('price', price)
-    ctx.state.data = res
+    if (data.length) {
+      searchData.planPeople = data[0].name
+    }
+  }
+  if (isBack) {
+    searchData.isBack = isBack
+  }
+  if (isPay) {
+    searchData.isPay = isPay
+  }
+
+  try {
+    const res = await mysql('cPlan').sum('price').sum('cost').sum('impost').sum('channelImpost').sum('rebate')
+      .where(searchData)
+      .where(function () {
+        if (publicNumber) {
+          this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
+            .orWhere('customerName', 'like', `%${publicNumber}%`)
+        }
+        if (remark) {
+          this.where('remark', 'like', `%${remark}%`)
+        }
+        if (financeReamrk) {
+          this.where('financeReamrk', 'like', `%${financeReamrk}%`)
+        }
+        if (startTime) {
+          this.where('createTime', '>=', startTime)
+        }
+        if (endTime) {
+          this.where('createTime', '<=', endTime)
+        }
+        if (inTimeStartTime) {
+          let startTime = `${new Date(inTimeStartTime).getTime()}`
+          startTime = startTime.substr(0, startTime.length - 3)
+          this.where('inTime', '>=', startTime)
+        }
+        if (inTimeEndTime) {
+          let endTime = `${new Date(inTimeEndTime).getTime()}`
+          endTime = endTime.substr(0, endTime.length - 3)
+          this.where('inTime', '<=', endTime)
+        }
+        if (backTimeStartTime) {
+          const startTime = new Date(backTimeStartTime).getTime()
+          this.where('backTime', '>=', startTime)
+        }
+        if (backTimeEndTime) {
+          const endTime = new Date(backTimeEndTime).getTime()
+          this.where('backTime', '<=', endTime)
+        }
+        if (tag && tag !== 'all') {
+          if (tag === 'self') {
+            this.where('userid', '=', userId)
+          } else if (tag === 'dept') {
+            this.whereIn('userid', function () {
+              this.select('id').from('cUser').whereIn('dept', function () {
+                this.select('dept').from('cUser').where({
+                  id: userId
+                })
+              })
+            })
+          } else if (tag === 'medium') {
+            this.whereIn('publicNumberId', function () {
+              this.select('id').from('cPublicNumber').where({
+                userid: userId
+              })
+            })
+          }
+        }
+      })
+      // Math.floor(15.7784514000 * 100) / 100
+    const price = Math.floor(res[0]['sum(`price`)'] * 100)/100
+    const cost = Math.floor(res[0]['sum(`cost`)'] * 100)/100
+    const impost = Math.floor(res[0]['sum(`impost`)'] * 100)/100
+    const channelImpost = Math.floor(res[0]['sum(`channelImpost`)'] * 100)/100
+    const rebate = Math.floor(res[0]['sum(`rebate`)'] * 100)/100
+    const profit = Math.floor(math.chain(price).subtract(cost).subtract(impost).add(channelImpost).subtract(rebate).value * 100) / 100
+    ctx.state.data = {
+      price,
+      cost,
+      impost,
+      channelImpost,
+      rebate,
+      profit
+    }
   } catch (error) {
     throw new Error(error)
   }
@@ -241,11 +334,11 @@ module.exports.getPlanCount = async (ctx, next) => {
     }
     if (planPeople) {
       const data = await mysql('cUser').where({
-        id:planPeople
-      })      
+        id: planPeople
+      })
       if (data.length) {
         searchData.planPeople = data[0].name
-      }      
+      }
     }
     if (isBack) {
       searchData.isBack = isBack
@@ -260,10 +353,10 @@ module.exports.getPlanCount = async (ctx, next) => {
     if (tag) {
       res = await mysql('cPlan').count('id as count')
         .where(searchData)
-        .where(function() {
+        .where(function () {
           if (publicNumber) {
             this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
-            .orWhere('customerName', 'like', `%${publicNumber}%`)
+              .orWhere('customerName', 'like', `%${publicNumber}%`)
           }
           if (remark) {
             this.where('remark', 'like', `%${remark}%`)
@@ -299,15 +392,15 @@ module.exports.getPlanCount = async (ctx, next) => {
             if (tag === 'self') {
               this.where('userid', '=', userId)
             } else if (tag === 'dept') {
-              this.whereIn('userid', function() {
-                this.select('id').from('cUser').whereIn('dept', function() {
+              this.whereIn('userid', function () {
+                this.select('id').from('cUser').whereIn('dept', function () {
                   this.select('dept').from('cUser').where({
                     id: userId
                   })
                 })
               })
             } else if (tag === 'medium') {
-              this.whereIn('publicNumberId', function() {
+              this.whereIn('publicNumberId', function () {
                 this.select('id').from('cPublicNumber').where({
                   userid: userId
                 })
