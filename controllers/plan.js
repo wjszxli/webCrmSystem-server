@@ -5,6 +5,13 @@ const {
   response
 } = require('../utils/util')
 
+const handleTime = (val) => {
+  let dateTime = new Date(val);
+  dateTime = dateTime.setDate(dateTime.getDate() + 1);
+  dateTime = new Date(dateTime);
+  return `${dateTime.getFullYear()}-${dateTime.getMonth() + 1}-${dateTime.getDate()}`
+}
+
 module.exports.savePlan = async (ctx, next) => {
   try {
     const {
@@ -133,7 +140,7 @@ module.exports.getPlan = async (ctx, next) => {
             this.where('createTime', '>=', startTime)
           }
           if (endTime) {
-            this.where('createTime', '<=', endTime)
+            this.where('createTime', '<', handleTime(endTime))
           }
           if (inTimeStartTime) {
             let startTime = `${new Date(inTimeStartTime).getTime()}`
@@ -246,7 +253,7 @@ module.exports.getPlanAllSum = async (ctx, next) => {
           this.where('createTime', '>=', startTime)
         }
         if (endTime) {
-          this.where('createTime', '<=', endTime)
+          this.where('createTime', '<=', handleTime(endTime))
         }
         if (inTimeStartTime) {
           let startTime = `${new Date(inTimeStartTime).getTime()}`
@@ -364,7 +371,7 @@ module.exports.getPlanCount = async (ctx, next) => {
             this.where('createTime', '>=', startTime)
           }
           if (endTime) {
-            this.where('createTime', '<=', endTime)
+            this.where('createTime', '<=', handleTime(endTime))
           }
           if (financeReamrk) {
             this.where('financeReamrk', 'like', `%${financeReamrk}%`)
@@ -438,10 +445,12 @@ module.exports.updatePlanBack = async (ctx, next) => {
   try {
     let {
       ids,
-      type
+      type,
+      backTime
     } = ctx.request.body
 
-    let backTime = new Date().getTime()
+    backTime = (new Date(backTime)).getTime()
+
 
     if (type === 1) {
       type = 0
