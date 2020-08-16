@@ -16,6 +16,13 @@ module.exports.saveCustomer = async (ctx, next) => {
       id
     } = ctx.request.body
     if (isAdd) {
+      const data = await mysql('cCustomer').where({ companyName })
+      if (data.length > 0) {
+        ctx.state.data = {
+          tip: '该客户已存在！'
+        }
+        return false
+      }
       await mysql('cCustomer').insert({
         companyName,
         brand,
@@ -77,7 +84,7 @@ module.exports.getCustomer = async (ctx, next) => {
     }
 
     let res = await mysql('cCustomer').limit(pageSize).offset((pageIndex - 1) * pageSize).where(searchData)
-      .where(function() {
+      .where(function () {
         if (customer) {
           this.where('companyName', 'like', `%${customer}%`).orWhere('brand', 'like', `%${customer}%`)
         }
@@ -85,8 +92,8 @@ module.exports.getCustomer = async (ctx, next) => {
           if (tag === 'self') {
             this.where('userid', '=', userId)
           } else if (tag === 'dept') {
-            this.whereIn('userid', function() {
-              this.select('id').from('cUser').whereIn('dept', function() {
+            this.whereIn('userid', function () {
+              this.select('id').from('cUser').whereIn('dept', function () {
                 this.select('dept').from('cUser').where({
                   id: userId
                 })
@@ -124,7 +131,7 @@ module.exports.getCustomerCount = async (ctx, next) => {
     }
 
     let res = await mysql('cCustomer').count('id as count').where(searchData)
-      .where(function() {
+      .where(function () {
         if (customer) {
           this.where('companyName', 'like', `%${customer}%`).orWhere('brand', 'like', `%${customer}%`)
         }
@@ -184,8 +191,8 @@ module.exports.follow = async (ctx, next) => {
     } = ctx.request.body
 
     await mysql('cCustomer').update({
-        remark
-      })
+      remark
+    })
       .where({
         id
       })

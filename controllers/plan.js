@@ -451,7 +451,6 @@ module.exports.updatePlanBack = async (ctx, next) => {
 
     backTime = (new Date(backTime)).getTime()
 
-
     if (type === 1) {
       type = 0
       backTime = ''

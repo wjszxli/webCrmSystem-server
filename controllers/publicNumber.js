@@ -22,7 +22,8 @@ module.exports.savePublicNumber = async (ctx, next) => {
       type,
       updateRouter,
       userId,
-      remark
+      remark,
+      newTime
     } = ctx.request.body
     if (operation === 'add') {
       let res = []
@@ -33,7 +34,7 @@ module.exports.savePublicNumber = async (ctx, next) => {
       }
       const updateTime = new Date()
       if (res.length === 0 || !dataId) {
-        await mysql('cPublicNumber').insert({
+        const data = {
           name,
           dataid: dataId,
           star,
@@ -50,10 +51,14 @@ module.exports.savePublicNumber = async (ctx, next) => {
           type,
           brush,
           remark
-        })
+        }
+        if (newTime) {
+          data.newTime = newTime
+        }
+        await mysql('cPublicNumber').insert(data)
       }
     } else if (operation === 'update') {
-      await mysql('cPublicNumber').update({
+      const data = {
         name,
         star,
         toptitle: topTitle,
@@ -68,7 +73,11 @@ module.exports.savePublicNumber = async (ctx, next) => {
         brush,
         type,
         remark
-      }).where({
+      }
+      if (newTime) {
+        data.newTime = newTime
+      }
+      await mysql('cPublicNumber').update(data).where({
         dataid: dataId
       })
     }
@@ -104,6 +113,7 @@ module.exports.getPublicNumber = async (ctx, next) => {
     const searchData = {}
     const searchOrder = order ? order : 'updateTime'
 
+    console.log('searchOrder', searchOrder)
 
     if (type) {
       searchData.type = type
@@ -112,7 +122,7 @@ module.exports.getPublicNumber = async (ctx, next) => {
     if (tag) {
       res = await mysql('cPublicNumber').limit(pageSize).offset((pageIndex - 1) * pageSize)
         .where(searchData)
-        .where(function() {
+        .where(function () {
           if (publicNumber) {
             this.where('name', 'like', `%${publicNumber}%`).orWhere('dataId', '=', publicNumber)
           }
@@ -134,7 +144,7 @@ module.exports.getPublicNumber = async (ctx, next) => {
           if (womenRatioE) {
             this.where('womenRatio', '<', womenRatioE)
           }
-          if (priceS){
+          if (priceS) {
             this.where('topCost', '>', Number(priceS))
           }
           if (priceE) {
@@ -147,8 +157,8 @@ module.exports.getPublicNumber = async (ctx, next) => {
             if (tag === 'self') {
               this.where('userid', '=', userId)
             } else if (tag === 'dept') {
-              this.whereIn('userid', function() {
-                this.select('id').from('cUser').whereIn('dept', function() {
+              this.whereIn('userid', function () {
+                this.select('id').from('cUser').whereIn('dept', function () {
                   this.select('dept').from('cUser').where({
                     id: userId
                   })
@@ -193,7 +203,7 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
     if (tag) {
       res = await mysql('cPublicNumber').count('id as count')
         .where(searchData)
-        .where(function() {
+        .where(function () {
           if (publicNumber) {
             this.where('name', 'like', `%${publicNumber}%`)
           }
@@ -215,7 +225,7 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
           if (womenRatioE) {
             this.where('womenRatio', '<', womenRatioE)
           }
-          if (priceS){
+          if (priceS) {
             this.where('topCost', '>', Number(priceS))
           }
           if (priceE) {
@@ -225,8 +235,8 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
             if (tag === 'self') {
               this.where('userid', '=', userId)
             } else if (tag === 'dept') {
-              this.whereIn('userid', function() {
-                this.select('id').from('cUser').whereIn('dept', function() {
+              this.whereIn('userid', function () {
+                this.select('id').from('cUser').whereIn('dept', function () {
                   this.select('dept').from('cUser').where({
                     id: userId
                   })
@@ -379,6 +389,48 @@ module.exports.updateImg = async (ctx, next) => {
     ctx.state.data = {
       tip: '修改成功'
     }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+module.exports.changeData = async (ctx, next) => {
+  // starImage
+  try {
+    const {
+      toData,
+      fromData
+    } = ctx.request.body
+    if (toData && fromData) {
+      let res = await mysql('cPublicNumber').where({ userId: fromData })
+      if (res.length) {
+        res.forEach(async item => {
+          const updateObj = { userId: toData }
+          await mysql('cPublicNumber').update(updateObj).where({
+            id: item.id
+          })
+        })
+      }
+
+      res = await mysql('cCustomer').where({ userId: fromData })
+      if (res.length) {
+        res.forEach(async item => {
+          const updateObj = { userId: toData }
+          await mysql('cCustomer').update(updateObj).where({
+            id: item.id
+          })
+        })
+      }
+
+      ctx.state.data = {
+        tip: '迁移成功'
+      }
+    } else {
+      ctx.state.data = {
+        tip: '数据有误，迁移失败'
+      }
+    }
+
   } catch (error) {
     throw new Error(error)
   }
