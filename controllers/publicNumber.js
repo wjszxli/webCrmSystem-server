@@ -113,61 +113,58 @@ module.exports.getPublicNumber = async (ctx, next) => {
     const searchData = {}
     const searchOrder = order ? order : 'updateTime'
 
-    console.log('searchOrder', searchOrder)
-
     if (type) {
       searchData.type = type
     }
     let res = []
-    if (tag) {
-      res = await mysql('cPublicNumber').limit(pageSize).offset((pageIndex - 1) * pageSize)
-        .where(searchData)
-        .where(function () {
-          if (publicNumber) {
-            this.where('name', 'like', `%${publicNumber}%`).orWhere('dataId', '=', publicNumber)
-          }
-          if (remark) {
-            this.where('remark', 'like', `%${remark}%`)
-          }
-          if (updateRouter) {
-            this.where('updateRouter', '=', updateRouter)
-          }
-          if (starS) {
-            this.where('star', '>', starS)
-          }
-          if (starE) {
-            this.where('star', '<', starE)
-          }
-          if (womenRatioS) {
-            this.where('womenRatio', '>', womenRatioS)
-          }
-          if (womenRatioE) {
-            this.where('womenRatio', '<', womenRatioE)
-          }
-          if (priceS) {
-            this.where('topCost', '>', Number(priceS))
-          }
-          if (priceE) {
-            this.where('topCost', '<', Number(priceE))
-          }
-          if (brush) {
-            this.where('brush', '=', brush)
-          }
-          if (tag && tag !== 'all') {
-            if (tag === 'self') {
-              this.where('userid', '=', userId)
-            } else if (tag === 'dept') {
-              this.whereIn('userid', function () {
-                this.select('id').from('cUser').whereIn('dept', function () {
-                  this.select('dept').from('cUser').where({
-                    id: userId
-                  })
+    res = await mysql('cPublicNumber').limit(pageSize).offset((pageIndex - 1) * pageSize)
+      .where(searchData)
+      .where(function () {
+        if (publicNumber) {
+          this.where('name', 'like', `%${publicNumber}%`).orWhere('dataId', '=', publicNumber)
+        }
+        if (remark) {
+          this.where('remark', 'like', `%${remark}%`)
+        }
+        if (updateRouter) {
+          this.where('updateRouter', '=', updateRouter)
+        }
+        if (starS) {
+          this.where('star', '>', starS)
+        }
+        if (starE) {
+          this.where('star', '<', starE)
+        }
+        if (womenRatioS) {
+          this.where('womenRatio', '>', womenRatioS)
+        }
+        if (womenRatioE) {
+          this.where('womenRatio', '<', womenRatioE)
+        }
+        if (priceS) {
+          this.where('topCost', '>', Number(priceS))
+        }
+        if (priceE) {
+          this.where('topCost', '<', Number(priceE))
+        }
+        if (brush) {
+          this.where('brush', '=', brush)
+        }
+        console.log('tag', tag)
+        if (tag !== 'all') {
+          if (tag === 'dept') {
+            this.whereIn('userid', function () {
+              this.select('id').from('cUser').whereIn('dept', function () {
+                this.select('dept').from('cUser').where({
+                  id: userId
                 })
               })
-            }
+            })
           }
-        }).orderBy(searchOrder, 'desc')
-    }
+          this.where('userid', '=', userId)
+        }
+      }).orderBy(searchOrder, 'desc')
+    console.log('searchOrder', searchOrder)
     ctx.state.data = res
 
   } catch (error) {
@@ -200,52 +197,49 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
     let res = [{
       count: 0
     }]
-    if (tag) {
-      res = await mysql('cPublicNumber').count('id as count')
-        .where(searchData)
-        .where(function () {
-          if (publicNumber) {
-            this.where('name', 'like', `%${publicNumber}%`)
-          }
-          if (remark) {
-            this.where('remark', 'like', `%${remark}%`)
-          }
-          if (updateRouter) {
-            this.where('updateRouter', '=', updateRouter)
-          }
-          if (starS) {
-            this.where('star', '>', starS)
-          }
-          if (starE) {
-            this.where('star', '<', starE)
-          }
-          if (womenRatioS) {
-            this.where('womenRatio', '>', womenRatioS)
-          }
-          if (womenRatioE) {
-            this.where('womenRatio', '<', womenRatioE)
-          }
-          if (priceS) {
-            this.where('topCost', '>', Number(priceS))
-          }
-          if (priceE) {
-            this.where('topCost', '<', Number(priceE))
-          }
-          if (tag && tag !== 'all') {
-            if (tag === 'self') {
-              this.where('userid', '=', userId)
-            } else if (tag === 'dept') {
-              this.whereIn('userid', function () {
-                this.select('id').from('cUser').whereIn('dept', function () {
-                  this.select('dept').from('cUser').where({
-                    id: userId
-                  })
+    res = await mysql('cPublicNumber').count('id as count')
+      .where(searchData)
+      .where(function () {
+        if (publicNumber) {
+          this.where('name', 'like', `%${publicNumber}%`)
+        }
+        if (remark) {
+          this.where('remark', 'like', `%${remark}%`)
+        }
+        if (updateRouter) {
+          this.where('updateRouter', '=', updateRouter)
+        }
+        if (starS) {
+          this.where('star', '>', starS)
+        }
+        if (starE) {
+          this.where('star', '<', starE)
+        }
+        if (womenRatioS) {
+          this.where('womenRatio', '>', womenRatioS)
+        }
+        if (womenRatioE) {
+          this.where('womenRatio', '<', womenRatioE)
+        }
+        if (priceS) {
+          this.where('topCost', '>', Number(priceS))
+        }
+        if (priceE) {
+          this.where('topCost', '<', Number(priceE))
+        }
+        if (tag !== 'all') {
+          if (tag === 'dept') {
+            this.whereIn('userid', function () {
+              this.select('id').from('cUser').whereIn('dept', function () {
+                this.select('dept').from('cUser').where({
+                  id: userId
                 })
               })
-            }
+            })
           }
-        })
-    }
+          this.where('userid', '=', userId)
+        }
+      })
     ctx.state.data = res
   } catch (error) {
     throw new Error(error)
@@ -417,6 +411,16 @@ module.exports.changeData = async (ctx, next) => {
         res.forEach(async item => {
           const updateObj = { userId: toData }
           await mysql('cCustomer').update(updateObj).where({
+            id: item.id
+          })
+        })
+      }
+
+      res = await mysql('cPlan').where({ userId: fromData })
+      if (res.length) {
+        res.forEach(async item => {
+          const updateObj = { userId: toData }
+          await mysql('cPlan').update(updateObj).where({
             id: item.id
           })
         })

@@ -99,10 +99,14 @@ module.exports.getPlan = async (ctx, next) => {
       inTimeStartTime,
       inTimeEndTime,
       backTimeStartTime,
-      backTimeEndTime
+      backTimeEndTime,
+      order
     } = ctx.request.query
 
     const searchData = {}
+
+    const searchOrder = order ? order : 'createTime'
+
 
     if (isDelete) {
       searchData.isDelete = isDelete
@@ -122,65 +126,63 @@ module.exports.getPlan = async (ctx, next) => {
       searchData.isPay = isPay
     }
     let res = []
-    if (tag) {
-      res = await mysql('cPlan').limit(pageSize).offset((pageIndex - 1) * pageSize)
-        .where(searchData)
-        .where(function () {
-          if (publicNumber) {
-            this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
-              .orWhere('customerName', 'like', `%${publicNumber}%`)
-          }
-          if (remark) {
-            this.where('remark', 'like', `%${remark}%`)
-          }
-          if (financeReamrk) {
-            this.where('financeReamrk', 'like', `%${financeReamrk}%`)
-          }
-          if (startTime) {
-            this.where('createTime', '>=', startTime)
-          }
-          if (endTime) {
-            this.where('createTime', '<', handleTime(endTime))
-          }
-          if (inTimeStartTime) {
-            let startTime = `${new Date(inTimeStartTime).getTime()}`
-            startTime = startTime.substr(0, startTime.length - 3)
-            this.where('inTime', '>=', startTime)
-          }
-          if (inTimeEndTime) {
-            let endTime = `${new Date(inTimeEndTime).getTime()}`
-            endTime = endTime.substr(0, endTime.length - 3)
-            this.where('inTime', '<=', endTime)
-          }
-          if (backTimeStartTime) {
-            const startTime = new Date(backTimeStartTime).getTime()
-            this.where('backTime', '>=', startTime)
-          }
-          if (backTimeEndTime) {
-            const endTime = new Date(backTimeEndTime).getTime()
-            this.where('backTime', '<=', endTime)
-          }
-          if (tag && tag !== 'all') {
-            if (tag === 'self') {
-              this.where('userid', '=', userId)
-            } else if (tag === 'dept') {
-              this.whereIn('userid', function () {
-                this.select('id').from('cUser').whereIn('dept', function () {
-                  this.select('dept').from('cUser').where({
-                    id: userId
-                  })
+    res = await mysql('cPlan').limit(pageSize).offset((pageIndex - 1) * pageSize)
+      .where(searchData)
+      .where(function () {
+        if (publicNumber) {
+          this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
+            .orWhere('customerName', 'like', `%${publicNumber}%`)
+        }
+        if (remark) {
+          this.where('remark', 'like', `%${remark}%`)
+        }
+        if (financeReamrk) {
+          this.where('financeReamrk', 'like', `%${financeReamrk}%`)
+        }
+        if (startTime) {
+          this.where('createTime', '>=', startTime)
+        }
+        if (endTime) {
+          this.where('createTime', '<', handleTime(endTime))
+        }
+        if (inTimeStartTime) {
+          let startTime = `${new Date(inTimeStartTime).getTime()}`
+          startTime = startTime.substr(0, startTime.length - 3)
+          this.where('inTime', '>=', startTime)
+        }
+        if (inTimeEndTime) {
+          let endTime = `${new Date(inTimeEndTime).getTime()}`
+          endTime = endTime.substr(0, endTime.length - 3)
+          this.where('inTime', '<=', Number(endTime) + 86400)
+        }
+        if (backTimeStartTime) {
+          const startTime = new Date(backTimeStartTime).getTime()
+          this.where('backTime', '>=', startTime)
+        }
+        if (backTimeEndTime) {
+          const endTime = new Date(backTimeEndTime).getTime()
+          this.where('backTime', '<=', endTime)
+        }
+        if (tag && tag !== 'all') {
+          if (tag === 'dept') {
+            this.whereIn('userid', function () {
+              this.select('id').from('cUser').whereIn('dept', function () {
+                this.select('dept').from('cUser').where({
+                  id: userId
                 })
               })
-            } else if (tag === 'medium') {
-              this.whereIn('publicNumberId', function () {
-                this.select('id').from('cPublicNumber').where({
-                  userid: userId
-                })
+            })
+          } else if (tag === 'medium') {
+            this.whereIn('publicNumberId', function () {
+              this.select('id').from('cPublicNumber').where({
+                userid: userId
               })
-            }
+            })
           }
-        }).orderBy('createTime', 'desc')
-    }
+          this.where('userid', '=', userId)
+        }
+      }).orderBy(searchOrder, 'desc')
+
     ctx.state.data = res
   } catch (error) {
     throw new Error(error)
@@ -356,65 +358,62 @@ module.exports.getPlanCount = async (ctx, next) => {
     let res = [{
       count: 0
     }]
-    if (tag) {
-      res = await mysql('cPlan').count('id as count')
-        .where(searchData)
-        .where(function () {
-          if (publicNumber) {
-            this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
-              .orWhere('customerName', 'like', `%${publicNumber}%`)
-          }
-          if (remark) {
-            this.where('remark', 'like', `%${remark}%`)
-          }
-          if (startTime) {
-            this.where('createTime', '>=', startTime)
-          }
-          if (endTime) {
-            this.where('createTime', '<=', handleTime(endTime))
-          }
-          if (financeReamrk) {
-            this.where('financeReamrk', 'like', `%${financeReamrk}%`)
-          }
-          if (inTimeStartTime) {
-            let startTime = `${new Date(inTimeStartTime).getTime()}`
-            startTime = startTime.substr(0, startTime.length - 3)
-            this.where('inTime', '>=', startTime)
-          }
-          if (inTimeEndTime) {
-            let endTime = `${new Date(inTimeEndTime).getTime()}`
-            endTime = endTime.substr(0, endTime.length - 3)
-            this.where('inTime', '<=', endTime)
-          }
-          if (backTimeStartTime) {
-            const startTime = new Date(backTimeStartTime).getTime()
-            this.where('backTime', '>=', startTime)
-          }
-          if (backTimeEndTime) {
-            const endTime = new Date(backTimeEndTime).getTime()
-            this.where('backTime', '<=', endTime)
-          }
-          if (tag && tag !== 'all') {
-            if (tag === 'self') {
-              this.where('userid', '=', userId)
-            } else if (tag === 'dept') {
-              this.whereIn('userid', function () {
-                this.select('id').from('cUser').whereIn('dept', function () {
-                  this.select('dept').from('cUser').where({
-                    id: userId
-                  })
+    res = await mysql('cPlan').count('id as count')
+      .where(searchData)
+      .where(function () {
+        if (publicNumber) {
+          this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
+            .orWhere('customerName', 'like', `%${publicNumber}%`)
+        }
+        if (remark) {
+          this.where('remark', 'like', `%${remark}%`)
+        }
+        if (startTime) {
+          this.where('createTime', '>=', startTime)
+        }
+        if (endTime) {
+          this.where('createTime', '<=', handleTime(endTime))
+        }
+        if (financeReamrk) {
+          this.where('financeReamrk', 'like', `%${financeReamrk}%`)
+        }
+        if (inTimeStartTime) {
+          let startTime = `${new Date(inTimeStartTime).getTime()}`
+          startTime = startTime.substr(0, startTime.length - 3)
+          this.where('inTime', '>=', startTime)
+        }
+        if (inTimeEndTime) {
+          let endTime = `${new Date(inTimeEndTime).getTime()}`
+          endTime = endTime.substr(0, endTime.length - 3)
+          this.where('inTime', '<=', endTime)
+        }
+        if (backTimeStartTime) {
+          const startTime = new Date(backTimeStartTime).getTime()
+          this.where('backTime', '>=', startTime)
+        }
+        if (backTimeEndTime) {
+          const endTime = new Date(backTimeEndTime).getTime()
+          this.where('backTime', '<=', endTime)
+        }
+        if (tag && tag !== 'all') {
+          if (tag === 'dept') {
+            this.whereIn('userid', function () {
+              this.select('id').from('cUser').whereIn('dept', function () {
+                this.select('dept').from('cUser').where({
+                  id: userId
                 })
               })
-            } else if (tag === 'medium') {
-              this.whereIn('publicNumberId', function () {
-                this.select('id').from('cPublicNumber').where({
-                  userid: userId
-                })
+            })
+          } else if (tag === 'medium') {
+            this.whereIn('publicNumberId', function () {
+              this.select('id').from('cPublicNumber').where({
+                userid: userId
               })
-            }
+            })
           }
-        })
-    }
+          this.where('userid', '=', userId)
+        }
+      })
     ctx.state.data = res
   } catch (error) {
     throw new Error(error)
