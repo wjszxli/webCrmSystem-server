@@ -265,7 +265,7 @@ module.exports.getPlanAllSum = async (ctx, next) => {
         if (inTimeEndTime) {
           let endTime = `${new Date(inTimeEndTime).getTime()}`
           endTime = endTime.substr(0, endTime.length - 3)
-          this.where('inTime', '<=', endTime)
+          this.where('inTime', '<=', Number(endTime) + 86400)
         }
         if (backTimeStartTime) {
           const startTime = new Date(backTimeStartTime).getTime()
@@ -385,7 +385,7 @@ module.exports.getPlanCount = async (ctx, next) => {
         if (inTimeEndTime) {
           let endTime = `${new Date(inTimeEndTime).getTime()}`
           endTime = endTime.substr(0, endTime.length - 3)
-          this.where('inTime', '<=', endTime)
+          this.where('inTime', '<=', Number(endTime) + 86400)
         }
         if (backTimeStartTime) {
           const startTime = new Date(backTimeStartTime).getTime()
