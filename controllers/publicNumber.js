@@ -397,11 +397,22 @@ module.exports.changeData = async (ctx, next) => {
     } = ctx.request.body
     if (toData && fromData) {
       const toUser = await mysql('cUser').where({ id: toData })
+      const fromUser = await mysql('cUser').where({ id: fromData })
 
       let res = await mysql('cPublicNumber').where({ userId: fromData })
       if (res.length) {
         res.forEach(async item => {
           const updateObj = { userId: toData, updateRouter: toUser[0].name }
+          await mysql('cPublicNumber').update(updateObj).where({
+            id: item.id
+          })
+        })
+      }
+
+      res = await mysql('cPublicNumber').where({ updateRouter: fromUser[0].name })
+      if (res.length) {
+        res.forEach(async item => {
+          const updateObj = { updateRouter: toUser[0].name }
           await mysql('cPublicNumber').update(updateObj).where({
             id: item.id
           })

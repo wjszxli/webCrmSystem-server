@@ -178,8 +178,9 @@ module.exports.getPlan = async (ctx, next) => {
                 userid: userId
               })
             })
+          } else {
+            this.where('userid', '=', userId)
           }
-          this.where('userid', '=', userId)
         }
       }).orderBy(searchOrder, 'desc')
 
@@ -410,8 +411,9 @@ module.exports.getPlanCount = async (ctx, next) => {
                 userid: userId
               })
             })
+          } else {
+            this.where('userid', '=', userId)
           }
-          this.where('userid', '=', userId)
         }
       })
     ctx.state.data = res
