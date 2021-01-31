@@ -111,4 +111,18 @@ router.post('/changeData', controllers.publicNumber.changeData)
 // router.post('*', controllers.error.notFind)
 // router.get('*', controllers.error.notFind)
 
+router.post('/saveNotification', controllers.notification.saveNotification)
+
+router.get('/getNotification', controllers.notification.getNotification)
+
+router.get('/getNotificationCount', controllers.notification.getNotificationCount)
+
+router.post('/addInDetail', controllers.notification.addInDetail)
+
+router.get('/getOneNotification', controllers.notification.getOneNotification)
+
+router.post('/updateNotification', controllers.notification.updateNotification)
+
+router.post('/deleteNotification', controllers.notification.deleteNotification)
+
 module.exports = router

@@ -3,7 +3,7 @@ const {
   isLogin
 } = require('../utils/util')
 
-module.exports.savePublicNumber = async (ctx, next) => {
+module.exports.saveNotification = async (ctx, next) => {
   try {
     isLogin(ctx, next)
     const {
@@ -23,8 +23,10 @@ module.exports.savePublicNumber = async (ctx, next) => {
       updateRouter,
       userId,
       remark,
-      newTime
+      newTime,
+      platform
     } = ctx.request.body
+    console.log('operation', operation)
     if (operation === 'add') {
       let res = []
       if (dataId) {
@@ -44,17 +46,19 @@ module.exports.savePublicNumber = async (ctx, next) => {
           secondcost: secondCost,
           lasttitle: lastTitle,
           lastcost: lastCost,
-          womenratio: womenRatio,
+          womenratio: 0,
           updaterouter: updateRouter,
           userid: userId,
           updatetime: updateTime,
           type,
           brush,
-          remark
+          remark,
+          platform
         }
         if (newTime) {
           data.newTime = newTime
         }
+        data.model = 1
         await mysql('cPublicNumber').insert(data)
       }
     } else if (operation === 'update') {
@@ -79,7 +83,7 @@ module.exports.savePublicNumber = async (ctx, next) => {
       }
       await mysql('cPublicNumber').update(data).where({
         dataid: dataId,
-        model: 0
+        model: 1
       })
     }
     ctx.state.data = {
@@ -90,7 +94,7 @@ module.exports.savePublicNumber = async (ctx, next) => {
   }
 }
 
-module.exports.getPublicNumber = async (ctx, next) => {
+module.exports.getNotification = async (ctx, next) => {
   try {
     isLogin(ctx, next)
     const {
@@ -109,9 +113,10 @@ module.exports.getPublicNumber = async (ctx, next) => {
       priceE,
       order,
       updateRouter,
-      remark
+      remark,
+      platform
     } = ctx.request.query
-    const searchData = { model: 0 }
+    const searchData = { model: 1 }
     const searchOrder = order ? order : 'updateTime'
 
     if (type) {
@@ -151,6 +156,9 @@ module.exports.getPublicNumber = async (ctx, next) => {
         if (brush) {
           this.where('brush', '=', brush)
         }
+        if (platform) {
+          this.where('platform', '=', platform)
+        }
         console.log('tag', tag)
         if (tag !== 'all') {
           if (tag === 'dept') {
@@ -164,7 +172,7 @@ module.exports.getPublicNumber = async (ctx, next) => {
           }
           this.where('userid', '=', userId)
         }
-      }).orderBy(searchOrder, 'desc')
+      }).orderBy(searchOrder)
     console.log('searchOrder', searchOrder)
     ctx.state.data = res
 
@@ -173,7 +181,7 @@ module.exports.getPublicNumber = async (ctx, next) => {
   }
 }
 
-module.exports.getPublicNumberCount = async (ctx, next) => {
+module.exports.getNotificationCount = async (ctx, next) => {
   try {
     isLogin(ctx, next)
     const {
@@ -188,9 +196,10 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
       priceS,
       priceE,
       remark,
-      updateRouter
+      updateRouter,
+      platform
     } = ctx.request.query
-    const searchData = { model: 0 }
+    const searchData = { model: 1 }
 
     if (type) {
       searchData.type = type
@@ -228,6 +237,9 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
         if (priceE) {
           this.where('topCost', '<', Number(priceE))
         }
+        if (platform) {
+          this.where('platform', '=', platform)
+        }
         if (tag !== 'all') {
           if (tag === 'dept') {
             this.whereIn('userid', function () {
@@ -247,12 +259,13 @@ module.exports.getPublicNumberCount = async (ctx, next) => {
   }
 }
 
-module.exports.deletePublicNumber = async (ctx, next) => {
+module.exports.deleteNotification = async (ctx, next) => {
   try {
     isLogin(ctx, next)
     const {
       id
     } = ctx.request.query
+    console.log('id', id)
     const res = await mysql('cPublicNumber').where({
       id
     }).del()
@@ -266,7 +279,7 @@ module.exports.deletePublicNumber = async (ctx, next) => {
   }
 }
 
-module.exports.getOnePublicNumber = async (ctx, next) => {
+module.exports.getOneNotification = async (ctx, next) => {
   try {
     isLogin(ctx, next)
     const {
@@ -304,7 +317,7 @@ module.exports.addInDetail = async (ctx, next) => {
   }
 }
 
-module.exports.updatePublicNumber = async (ctx, next) => {
+module.exports.updateNotification = async (ctx, next) => {
   try {
     isLogin(ctx, next)
     const {
@@ -322,7 +335,8 @@ module.exports.updatePublicNumber = async (ctx, next) => {
       brush,
       type,
       updateRouter,
-      remark
+      remark,
+      platform
     } = ctx.request.body
     const res = await mysql('cPublicNumber').where({
       id
@@ -348,7 +362,8 @@ module.exports.updatePublicNumber = async (ctx, next) => {
         updateRouter: updateRouter,
         remark,
         brush,
-        type
+        type,
+        platform
       }
       if (updateTime) {
         updateObj.updateTime = updateTime

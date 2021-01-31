@@ -14,7 +14,7 @@ const handleTime = (val) => {
 
 module.exports.savePlan = async (ctx, next) => {
   try {
-    const {
+    let {
       publicNumber,
       location,
       inTime,
@@ -32,9 +32,10 @@ module.exports.savePlan = async (ctx, next) => {
       userId,
       impost,
       channelImpost,
-      rebate
+      rebate,
+      model,
+      medium
     } = ctx.request.body
-
 
     await mysql('cPlan').insert({
       publicnumber: publicNumber,
@@ -54,13 +55,15 @@ module.exports.savePlan = async (ctx, next) => {
       userid: userId,
       impost,
       channelimpost: channelImpost,
-      rebate
+      rebate,
+      model,
+      medium
     })
 
     if (publicNumberId) {
       const res = await mysql('cPublicNumber')
         .where({
-          id: publicNumberId
+          id: publicNumberId,
         })
       if (res.length) {
         await mysql('cPublicNumber')
@@ -100,7 +103,9 @@ module.exports.getPlan = async (ctx, next) => {
       inTimeEndTime,
       backTimeStartTime,
       backTimeEndTime,
-      order
+      order,
+      model,
+      medium
     } = ctx.request.query
 
     const searchData = {}
@@ -124,6 +129,12 @@ module.exports.getPlan = async (ctx, next) => {
     }
     if (isPay) {
       searchData.isPay = isPay
+    }
+    if (model) {
+      searchData.model = model
+    }
+    if (medium) {
+      searchData.medium = medium
     }
     let res = []
     res = await mysql('cPlan').limit(pageSize).offset((pageIndex - 1) * pageSize)
@@ -175,7 +186,8 @@ module.exports.getPlan = async (ctx, next) => {
           } else if (tag === 'medium') {
             this.whereIn('publicNumberId', function () {
               this.select('id').from('cPublicNumber').where({
-                userid: userId
+                userid: userId,
+                model: 0
               })
             })
           } else {
@@ -290,7 +302,8 @@ module.exports.getPlanAllSum = async (ctx, next) => {
           } else if (tag === 'medium') {
             this.whereIn('publicNumberId', function () {
               this.select('id').from('cPublicNumber').where({
-                userid: userId
+                userid: userId,
+                model: 0
               })
             })
           }
@@ -333,7 +346,9 @@ module.exports.getPlanCount = async (ctx, next) => {
       inTimeStartTime,
       inTimeEndTime,
       backTimeStartTime,
-      backTimeEndTime
+      backTimeEndTime,
+      model,
+      medium
     } = ctx.request.query
 
     const searchData = {}
@@ -354,6 +369,13 @@ module.exports.getPlanCount = async (ctx, next) => {
     }
     if (isPay) {
       searchData.isPay = isPay
+    }
+    if (model) {
+      searchData.model = model
+    }
+
+    if (medium) {
+      searchData.medium = medium
     }
 
     let res = [{
@@ -408,7 +430,8 @@ module.exports.getPlanCount = async (ctx, next) => {
           } else if (tag === 'medium') {
             this.whereIn('publicNumberId', function () {
               this.select('id').from('cPublicNumber').where({
-                userid: userId
+                userid: userId,
+                model: 0
               })
             })
           } else {
