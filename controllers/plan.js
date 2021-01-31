@@ -227,7 +227,9 @@ module.exports.getPlanAllSum = async (ctx, next) => {
     inTimeStartTime,
     inTimeEndTime,
     backTimeStartTime,
-    backTimeEndTime
+    backTimeEndTime,
+    model,
+    medium
   } = ctx.request.query
 
   const searchData = {}
@@ -248,6 +250,13 @@ module.exports.getPlanAllSum = async (ctx, next) => {
   }
   if (isPay) {
     searchData.isPay = isPay
+  }
+
+  if (model) {
+    searchData.model = model
+  }
+  if (medium) {
+    searchData.medium = medium
   }
 
   try {
