@@ -606,7 +606,8 @@ module.exports.updatePlan = async (ctx, next) => {
       id,
       impost,
       channelImpost,
-      rebate
+      rebate,
+      medium
     } = ctx.request.body
     if (id) {
       await mysql('cPlan').update({
@@ -627,7 +628,8 @@ module.exports.updatePlan = async (ctx, next) => {
         userid: userId,
         impost,
         channelimpost: channelImpost,
-        rebate
+        rebate,
+        medium
       }).where({
         id
       })
