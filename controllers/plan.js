@@ -157,21 +157,21 @@ module.exports.getPlan = async (ctx, next) => {
           this.where('createTime', '<', handleTime(endTime))
         }
         if (inTimeStartTime) {
-          let startTime = `${new Date(inTimeStartTime).getTime()}`
+          let startTime = `${new Date(inTimeStartTime).getTime() - 28800000}`
           startTime = startTime.substr(0, startTime.length - 3)
           this.where('inTime', '>=', startTime)
         }
         if (inTimeEndTime) {
-          let endTime = `${new Date(inTimeEndTime).getTime()}`
+          let endTime = `${new Date(inTimeEndTime).getTime() + 57599000}`
           endTime = endTime.substr(0, endTime.length - 3)
           this.where('inTime', '<=', Number(endTime) + 86400)
         }
         if (backTimeStartTime) {
-          const startTime = new Date(backTimeStartTime).getTime()
+          const startTime = new Date(backTimeStartTime).getTime() - 28800000
           this.where('backTime', '>=', startTime)
         }
         if (backTimeEndTime) {
-          const endTime = new Date(backTimeEndTime).getTime()
+          const endTime = new Date(backTimeEndTime).getTime() + 57599000
           this.where('backTime', '<=', endTime)
         }
         if (tag && tag !== 'all') {
@@ -280,21 +280,21 @@ module.exports.getPlanAllSum = async (ctx, next) => {
           this.where('createTime', '<=', handleTime(endTime))
         }
         if (inTimeStartTime) {
-          let startTime = `${new Date(inTimeStartTime).getTime()}`
+          let startTime = `${new Date(inTimeStartTime).getTime() - 28800000}`
           startTime = startTime.substr(0, startTime.length - 3)
           this.where('inTime', '>=', startTime)
         }
         if (inTimeEndTime) {
-          let endTime = `${new Date(inTimeEndTime).getTime()}`
+          let endTime = `${new Date(inTimeEndTime).getTime() + 57599000}`
           endTime = endTime.substr(0, endTime.length - 3)
           this.where('inTime', '<=', Number(endTime) + 86400)
         }
         if (backTimeStartTime) {
-          const startTime = new Date(backTimeStartTime).getTime()
+          const startTime = new Date(backTimeStartTime).getTime() - 28800000
           this.where('backTime', '>=', startTime)
         }
         if (backTimeEndTime) {
-          const endTime = new Date(backTimeEndTime).getTime()
+          const endTime = new Date(backTimeEndTime).getTime() + 57599000
           this.where('backTime', '<=', endTime)
         }
         if (tag && tag !== 'all') {
@@ -410,21 +410,21 @@ module.exports.getPlanCount = async (ctx, next) => {
           this.where('financeReamrk', 'like', `%${financeReamrk}%`)
         }
         if (inTimeStartTime) {
-          let startTime = `${new Date(inTimeStartTime).getTime()}`
+          let startTime = `${new Date(inTimeStartTime).getTime() - 28800000}`
           startTime = startTime.substr(0, startTime.length - 3)
           this.where('inTime', '>=', startTime)
         }
         if (inTimeEndTime) {
-          let endTime = `${new Date(inTimeEndTime).getTime()}`
+          let endTime = `${new Date(inTimeEndTime).getTime() + 57599000}`
           endTime = endTime.substr(0, endTime.length - 3)
           this.where('inTime', '<=', Number(endTime) + 86400)
         }
         if (backTimeStartTime) {
-          const startTime = new Date(backTimeStartTime).getTime()
+          const startTime = new Date(backTimeStartTime).getTime() - 28800000
           this.where('backTime', '>=', startTime)
         }
         if (backTimeEndTime) {
-          const endTime = new Date(backTimeEndTime).getTime()
+          const endTime = new Date(backTimeEndTime).getTime() + 57599000
           this.where('backTime', '<=', endTime)
         }
         if (tag && tag !== 'all') {
