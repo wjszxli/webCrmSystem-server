@@ -125,4 +125,20 @@ router.post('/updateNotification', controllers.notification.updateNotification)
 
 router.post('/deleteNotification', controllers.notification.deleteNotification)
 
+// -------------------------------------------------------
+
+router.post('/saveWeibo', controllers.weibo.saveWeibo)
+
+router.get('/getWeibo', controllers.weibo.getWeibo)
+
+router.get('/getWeiboCount', controllers.weibo.getWeiboCount)
+
+router.post('/addInDetail', controllers.weibo.addInDetail)
+
+router.get('/getOneWeibo', controllers.weibo.getOneWeibo)
+
+router.post('/updateWeibo', controllers.weibo.updateWeibo)
+
+router.post('/deleteWeibo', controllers.weibo.deleteWeibo)
+
 module.exports = router
