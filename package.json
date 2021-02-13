@@ -11,7 +11,7 @@
     "license": "MIT",
     "dependencies": {
         "axios": "^0.15.3",
-        "knex": "^0.13.0",
+        "knex": "^0.20.1",
         "koa": "^2.0.0",
         "koa-bodyparser": "^3.2.0",
         "koa-formidable": "^1.1.0",
