@@ -172,7 +172,7 @@ module.exports.getNotification = async (ctx, next) => {
           }
           this.where('userid', '=', userId)
         }
-      }).orderBy(searchOrder)
+      }).orderBy(searchOrder, 'desc')
     console.log('searchOrder', searchOrder)
     ctx.state.data = res
 
