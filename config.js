@@ -2,7 +2,7 @@ const CONF = {
     port: '5757',
     rootPathname: './',
     mysql: {
-        host: '127.0.0.1',
+        host: '47.97.182.189',
         port: 3306,
         user: 'root',
         db: 'libaisi_crm',

@@ -144,6 +144,7 @@ module.exports.getPlan = async (ctx, next) => {
           this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
             .orWhere('customerName', 'like', `%${publicNumber}%`)
         }
+      }).where(function () {
         if (remark) {
           this.where('remark', 'like', `%${remark}%`)
         }
@@ -267,6 +268,7 @@ module.exports.getPlanAllSum = async (ctx, next) => {
           this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
             .orWhere('customerName', 'like', `%${publicNumber}%`)
         }
+      }).where(function () {
         if (remark) {
           this.where('remark', 'like', `%${remark}%`)
         }
@@ -397,6 +399,7 @@ module.exports.getPlanCount = async (ctx, next) => {
           this.where('id', publicNumber).orWhere('publicNumber', 'like', `%${publicNumber}%`)
             .orWhere('customerName', 'like', `%${publicNumber}%`)
         }
+      }).where(function () {
         if (remark) {
           this.where('remark', 'like', `%${remark}%`)
         }
