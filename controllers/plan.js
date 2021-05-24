@@ -188,7 +188,7 @@ module.exports.getPlan = async (ctx, next) => {
             this.whereIn('publicNumberId', function () {
               this.select('id').from('cPublicNumber').where({
                 userid: userId,
-                model: 0
+                model: model
               })
             })
           } else {
@@ -314,7 +314,7 @@ module.exports.getPlanAllSum = async (ctx, next) => {
             this.whereIn('publicNumberId', function () {
               this.select('id').from('cPublicNumber').where({
                 userid: userId,
-                model: 0
+                model
               })
             })
           }
@@ -443,7 +443,7 @@ module.exports.getPlanCount = async (ctx, next) => {
             this.whereIn('publicNumberId', function () {
               this.select('id').from('cPublicNumber').where({
                 userid: userId,
-                model: 0
+                model
               })
             })
           } else {
