@@ -189,11 +189,14 @@ module.exports.getPlan = async (ctx, next) => {
                 });
             });
           } else if (tag === "medium") {
+            const obj = { model };
+            if (medium) {
+              obj["updateRouter"] = medium;
+            } else {
+              obj["userid"] = userId;
+            }
             this.whereIn("publicNumberId", function () {
-              this.select("id").from("cPublicNumber").where({
-                updateRouter: medium,
-                model: model,
-              });
+              this.select("id").from("cPublicNumber").where(obj);
             });
           } else {
             this.where("userid", "=", userId);
@@ -325,11 +328,14 @@ module.exports.getPlanAllSum = async (ctx, next) => {
                 });
             });
           } else if (tag === "medium") {
+            const obj = { model };
+            if (medium) {
+              obj["updateRouter"] = medium;
+            } else {
+              obj["userid"] = userId;
+            }
             this.whereIn("publicNumberId", function () {
-              this.select("id").from("cPublicNumber").where({
-                updateRouter: medium,
-                model,
-              });
+              this.select("id").from("cPublicNumber").where(obj);
             });
           }
         }
@@ -471,10 +477,13 @@ module.exports.getPlanCount = async (ctx, next) => {
             });
           } else if (tag === "medium") {
             this.whereIn("publicNumberId", function () {
-              this.select("id").from("cPublicNumber").where({
-                updateRouter: medium,
-                model,
-              });
+              const obj = { model };
+              if (medium) {
+                obj["updateRouter"] = medium;
+              } else {
+                obj["userid"] = userId;
+              }
+              this.select("id").from("cPublicNumber").where(obj);
             });
           } else {
             this.where("userid", "=", userId);
