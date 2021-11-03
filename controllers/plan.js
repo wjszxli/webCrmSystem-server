@@ -177,6 +177,7 @@ module.exports.getPlan = async (ctx, next) => {
           const endTime = new Date(backTimeEndTime).getTime() + 57599000;
           this.where("backTime", "<=", endTime);
         }
+        console.log("tag", tag);
         if (tag && tag !== "all") {
           if (tag === "dept") {
             this.whereIn("userid", function () {
@@ -199,7 +200,11 @@ module.exports.getPlan = async (ctx, next) => {
               this.select("id").from("cPublicNumber").where(obj);
             });
           } else {
-            this.where("userid", "=", userId);
+            this.where("medium", "=", function () {
+              this.select("name").from("cUser").where({
+                id: userId,
+              });
+            });
           }
         }
       })
@@ -316,7 +321,11 @@ module.exports.getPlanAllSum = async (ctx, next) => {
         }
         if (tag && tag !== "all") {
           if (tag === "self") {
-            this.where("userid", "=", userId);
+            this.where("medium", "=", function () {
+              this.select("name").from("cUser").where({
+                id: userId,
+              });
+            });
           } else if (tag === "dept") {
             this.whereIn("userid", function () {
               this.select("id")
@@ -486,7 +495,11 @@ module.exports.getPlanCount = async (ctx, next) => {
               this.select("id").from("cPublicNumber").where(obj);
             });
           } else {
-            this.where("userid", "=", userId);
+            this.where("medium", "=", function () {
+              this.select("name").from("cUser").where({
+                id: userId,
+              });
+            });
           }
         }
       });
