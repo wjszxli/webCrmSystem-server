@@ -177,8 +177,7 @@ module.exports.getPlan = async (ctx, next) => {
           const endTime = new Date(backTimeEndTime).getTime() + 57599000;
           this.where("backTime", "<=", endTime);
         }
-        console.log("tag", tag);
-        if (tag && tag !== "all") {
+        if (tag !== "all") {
           if (tag === "dept") {
             this.whereIn("userid", function () {
               this.select("id")
@@ -189,23 +188,8 @@ module.exports.getPlan = async (ctx, next) => {
                   });
                 });
             });
-          } else if (tag === "medium") {
-            const obj = { model };
-            if (medium) {
-              obj["updateRouter"] = medium;
-            } else {
-              obj["userid"] = userId;
-            }
-            this.whereIn("publicNumberId", function () {
-              this.select("id").from("cPublicNumber").where(obj);
-            });
-          } else {
-            this.where("medium", "=", function () {
-              this.select("name").from("cUser").where({
-                id: userId,
-              });
-            });
           }
+          this.where("userid", "=", userId);
         }
       })
       .orderBy(searchOrder, "desc");
@@ -319,14 +303,8 @@ module.exports.getPlanAllSum = async (ctx, next) => {
           const endTime = new Date(backTimeEndTime).getTime() + 57599000;
           this.where("backTime", "<=", endTime);
         }
-        if (tag && tag !== "all") {
-          if (tag === "self") {
-            this.where("medium", "=", function () {
-              this.select("name").from("cUser").where({
-                id: userId,
-              });
-            });
-          } else if (tag === "dept") {
+        if (tag !== "all") {
+          if (tag === "dept") {
             this.whereIn("userid", function () {
               this.select("id")
                 .from("cUser")
@@ -336,17 +314,8 @@ module.exports.getPlanAllSum = async (ctx, next) => {
                   });
                 });
             });
-          } else if (tag === "medium") {
-            const obj = { model };
-            if (medium) {
-              obj["updateRouter"] = medium;
-            } else {
-              obj["userid"] = userId;
-            }
-            this.whereIn("publicNumberId", function () {
-              this.select("id").from("cPublicNumber").where(obj);
-            });
           }
+          this.where("userid", "=", userId);
         }
       });
     // Math.floor(15.7784514000 * 100) / 100
@@ -473,7 +442,7 @@ module.exports.getPlanCount = async (ctx, next) => {
           const endTime = new Date(backTimeEndTime).getTime() + 57599000;
           this.where("backTime", "<=", endTime);
         }
-        if (tag && tag !== "all") {
+        if (tag !== "all") {
           if (tag === "dept") {
             this.whereIn("userid", function () {
               this.select("id")
@@ -484,23 +453,8 @@ module.exports.getPlanCount = async (ctx, next) => {
                   });
                 });
             });
-          } else if (tag === "medium") {
-            this.whereIn("publicNumberId", function () {
-              const obj = { model };
-              if (medium) {
-                obj["updateRouter"] = medium;
-              } else {
-                obj["userid"] = userId;
-              }
-              this.select("id").from("cPublicNumber").where(obj);
-            });
-          } else {
-            this.where("medium", "=", function () {
-              this.select("name").from("cUser").where({
-                id: userId,
-              });
-            });
           }
+          this.where("userid", "=", userId);
         }
       });
     ctx.state.data = res;
