@@ -188,8 +188,14 @@ module.exports.getPlan = async (ctx, next) => {
                   });
                 });
             });
-          } else {
+          } else if (tag === "medium") {
             this.where("medium", function () {
+              this.select("name").from("cUser").where({
+                id: userId,
+              });
+            });
+          } else if (tag === "self") {
+            this.where("planPeople", function () {
               this.select("name").from("cUser").where({
                 id: userId,
               });
@@ -319,8 +325,14 @@ module.exports.getPlanAllSum = async (ctx, next) => {
                   });
                 });
             });
-          } else {
+          } else if (tag === "medium") {
             this.where("medium", function () {
+              this.select("name").from("cUser").where({
+                id: userId,
+              });
+            });
+          } else if (tag === "self") {
+            this.where("planPeople", function () {
               this.select("name").from("cUser").where({
                 id: userId,
               });
@@ -463,8 +475,14 @@ module.exports.getPlanCount = async (ctx, next) => {
                   });
                 });
             });
-          } else {
+          } else if (tag === "medium") {
             this.where("medium", function () {
+              this.select("name").from("cUser").where({
+                id: userId,
+              });
+            });
+          } else if (tag === "self") {
+            this.where("planPeople", function () {
               this.select("name").from("cUser").where({
                 id: userId,
               });
