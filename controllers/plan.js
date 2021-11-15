@@ -188,8 +188,13 @@ module.exports.getPlan = async (ctx, next) => {
                   });
                 });
             });
+          } else {
+            this.where("medium", function () {
+              this.select("name").from("cUser").where({
+                id: userId,
+              });
+            });
           }
-          this.where("userid", "=", userId);
         }
       })
       .orderBy(searchOrder, "desc");
@@ -314,8 +319,13 @@ module.exports.getPlanAllSum = async (ctx, next) => {
                   });
                 });
             });
+          } else {
+            this.where("medium", function () {
+              this.select("name").from("cUser").where({
+                id: userId,
+              });
+            });
           }
-          this.where("userid", "=", userId);
         }
       });
     // Math.floor(15.7784514000 * 100) / 100
@@ -453,8 +463,13 @@ module.exports.getPlanCount = async (ctx, next) => {
                   });
                 });
             });
+          } else {
+            this.where("medium", function () {
+              this.select("name").from("cUser").where({
+                id: userId,
+              });
+            });
           }
-          this.where("userid", "=", userId);
         }
       });
     ctx.state.data = res;
