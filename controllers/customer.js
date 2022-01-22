@@ -1,4 +1,4 @@
-const mysql = require('../utils/mysql')
+const mysql = require("../utils/mysql");
 
 module.exports.saveCustomer = async (ctx, next) => {
   try {
@@ -13,17 +13,17 @@ module.exports.saveCustomer = async (ctx, next) => {
       people,
       userId,
       isAdd,
-      id
-    } = ctx.request.body
+      id,
+    } = ctx.request.body;
     if (isAdd) {
-      const data = await mysql('cCustomer').where({ companyName })
+      const data = await mysql("cCustomer").where({ companyName });
       if (data.length > 0) {
         ctx.state.data = {
-          tip: '该客户已存在！'
-        }
-        return false
+          tip: "该客户已存在！",
+        };
+        return false;
       }
-      await mysql('cCustomer').insert({
+      await mysql("cCustomer").insert({
         companyName,
         brand,
         connect,
@@ -32,31 +32,33 @@ module.exports.saveCustomer = async (ctx, next) => {
         qq,
         isCollaborate,
         people,
-        userid: userId
-      })
+        userid: userId,
+      });
     } else {
-      await mysql('cCustomer').update({
-        companyName,
-        brand,
-        connect,
-        phone,
-        webchat,
-        qq,
-        isCollaborate,
-        people,
-        userid: userId
-      }).where({
-        id
-      })
+      await mysql("cCustomer")
+        .update({
+          companyName,
+          brand,
+          connect,
+          phone,
+          webchat,
+          qq,
+          isCollaborate,
+          people,
+          userid: userId,
+        })
+        .where({
+          id,
+        });
     }
 
     ctx.state.data = {
-      tip: '保存成功'
-    }
+      tip: "保存成功",
+    };
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
-}
+};
 
 module.exports.getCustomer = async (ctx, next) => {
   try {
@@ -68,146 +70,207 @@ module.exports.getCustomer = async (ctx, next) => {
       people,
       isCollaborate,
       tag,
-      userId
-    } = ctx.request.query
+      userId,
+      companyName,
+    } = ctx.request.query;
 
-    const searchData = {}
+    const searchData = {};
 
     if (isDelete) {
-      searchData.isDelete = isDelete
+      searchData.isDelete = isDelete;
     }
     if (people) {
-      searchData.people = people
+      searchData.people = people;
     }
     if (isCollaborate) {
-      searchData.isCollaborate = isCollaborate
+      searchData.isCollaborate = isCollaborate;
     }
 
-    let res = await mysql('cCustomer').limit(pageSize).offset((pageIndex - 1) * pageSize).where(searchData)
+    if (companyName) {
+      searchData.companyName = companyName;
+    }
+
+    let res = await mysql("cCustomer")
+      .limit(pageSize)
+      .offset((pageIndex - 1) * pageSize)
+      .where(searchData)
       .where(function () {
         if (customer) {
-          this.where('companyName', 'like', `%${customer}%`).orWhere('brand', 'like', `%${customer}%`)
+          this.where("companyName", "like", `%${customer}%`).orWhere(
+            "brand",
+            "like",
+            `%${customer}%`
+          );
         }
-        if (tag && tag !== 'all') {
-          if (tag === 'self') {
-            this.where('userid', '=', userId)
-          } else if (tag === 'dept') {
-            this.whereIn('userid', function () {
-              this.select('id').from('cUser').whereIn('dept', function () {
-                this.select('dept').from('cUser').where({
-                  id: userId
-                })
-              })
-            })
+        if (tag && tag !== "all") {
+          if (tag === "self") {
+            this.where("userid", "=", userId);
+          } else if (tag === "dept") {
+            this.whereIn("userid", function () {
+              this.select("id")
+                .from("cUser")
+                .whereIn("dept", function () {
+                  this.select("dept").from("cUser").where({
+                    id: userId,
+                  });
+                });
+            });
           }
         }
       })
+      .orderBy("createTime", "desc");
 
-    ctx.state.data = res
+    ctx.state.data = res;
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
-}
+};
 
 module.exports.getCustomerCount = async (ctx, next) => {
   try {
-    const {
-      isDelete,
-      customer,
-      people,
-      isCollaborate
-    } = ctx.request.query
+    const { isDelete, customer, people, isCollaborate, tag, companyName } =
+      ctx.request.query;
 
-    const searchData = {}
+    const searchData = {};
 
     if (isDelete) {
-      searchData.isDelete = isDelete
+      searchData.isDelete = isDelete;
     }
     if (people) {
-      searchData.people = people
+      searchData.people = people;
     }
     if (isCollaborate) {
-      searchData.isCollaborate = isCollaborate
+      searchData.isCollaborate = isCollaborate;
+    }
+    if (companyName) {
+      searchData.companyName = companyName;
     }
 
-    let res = await mysql('cCustomer').count('id as count').where(searchData)
+    let res = await mysql("cCustomer")
+      .count("id as count")
+      .where(searchData)
       .where(function () {
         if (customer) {
-          this.where('companyName', 'like', `%${customer}%`).orWhere('brand', 'like', `%${customer}%`)
+          this.where("companyName", "like", `%${customer}%`).orWhere(
+            "brand",
+            "like",
+            `%${customer}%`
+          );
         }
-      })
+        if (tag && tag !== "all") {
+          if (tag === "self") {
+            this.where("userid", "=", userId);
+          } else if (tag === "dept") {
+            this.whereIn("userid", function () {
+              this.select("id")
+                .from("cUser")
+                .whereIn("dept", function () {
+                  this.select("dept").from("cUser").where({
+                    id: userId,
+                  });
+                });
+            });
+          }
+        }
+      });
     // ctx.status = 401
-    ctx.state.data = res
+    ctx.state.data = res;
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
-}
+};
 
 module.exports.deleteCustomer = async (ctx, next) => {
   try {
-    const {
-      id,
-      isDelete
-    } = ctx.request.body
-    console.log('isDelete', isDelete)
-    res = await mysql('cCustomer').update({
-      isDelete
-    }).where({
-      id
-    })
-    let tip = '捡起成功'
+    const { id, isDelete } = ctx.request.body;
+    console.log("isDelete", isDelete);
+    res = await mysql("cCustomer")
+      .update({
+        isDelete,
+      })
+      .where({
+        id,
+      });
+    let tip = "捡起成功";
     if (isDelete) {
-      tip = '删除成功'
+      tip = "删除成功";
     }
     ctx.state.data = {
-      tip
-    }
+      tip,
+    };
   } catch (error) {
-    console.log('error', error)
-    throw new Error(error)
+    console.log("error", error);
+    throw new Error(error);
   }
-}
+};
 
 module.exports.getOneCustomer = async (ctx, next) => {
   try {
-    const {
-      id
-    } = ctx.request.query
-    res = await mysql('cCustomer').where({
-      id
-    })
-    ctx.state.data = res
+    const { id } = ctx.request.query;
+    res = await mysql("cCustomer").where({
+      id,
+    });
+    ctx.state.data = res;
   } catch (error) {
-    console.log('error', error)
-    throw new Error(error)
+    console.log("error", error);
+    throw new Error(error);
   }
-}
+};
 
 module.exports.follow = async (ctx, next) => {
   try {
-    const {
-      id,
-      remark
-    } = ctx.request.body
+    const { id, remark } = ctx.request.body;
 
-    await mysql('cCustomer').update({
-      remark
-    })
-      .where({
-        id
+    await mysql("cCustomer")
+      .update({
+        remark,
       })
+      .where({
+        id,
+      });
     ctx.state.data = {
-      tip: '跟进成功'
-    }
+      tip: "跟进成功",
+    };
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
-}
+};
 
 module.exports.getAllCustomer = async (ctx, next) => {
-  let res = await mysql('cCustomer')
-    .where({
-      isDelete: 0
-    })
-  ctx.state.data = res
-}
+  let res = await mysql("cCustomer").where({
+    isDelete: 0,
+  });
+  ctx.state.data = res;
+};
+
+module.exports.getCustomerLike = async (ctx, next) => {
+  try {
+    const { companyName, tag } = ctx.request.query;
+
+    let res = await mysql("cCustomer")
+      .limit(10)
+      .where(function () {
+        this.where("companyName", "like", `%${companyName}%`);
+        if (tag && tag !== "all") {
+          if (tag === "self") {
+            this.where("userid", "=", userId);
+          } else if (tag === "dept") {
+            this.whereIn("userid", function () {
+              this.select("id")
+                .from("cUser")
+                .whereIn("dept", function () {
+                  this.select("dept").from("cUser").where({
+                    id: userId,
+                  });
+                });
+            });
+          }
+        }
+      })
+      .orderBy("createTime", "desc");
+
+    ctx.state.data = res;
+  } catch (error) {
+    throw new Error(error);
+  }
+};

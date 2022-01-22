@@ -1,144 +1,152 @@
 /**
  * ajax 服务路由集合
  */
-const router = require('koa-router')({
-    prefix: '/api'
-})
-const controllers = require('../controllers')
+const router = require("koa-router")({
+  prefix: "/api",
+});
+const controllers = require("../controllers");
 
 // 填写用户信息
-router.post('/saveUserInfo', controllers.user.saveUserInfo)
+router.post("/saveUserInfo", controllers.user.saveUserInfo);
 
 //  获取用户信息
-router.get('/getUserInfo', controllers.user.getUserInfo)
+router.get("/getUserInfo", controllers.user.getUserInfo);
 
 // 获取数据条数
-router.get('/getUserCount', controllers.user.getUserCount)
+router.get("/getUserCount", controllers.user.getUserCount);
 
 // 删除数据
-router.post('/deleteUser', controllers.user.deleteUser)
+router.post("/deleteUser", controllers.user.deleteUser);
 
 // 修改密码
-router.post('/modifyPwd', controllers.user.modifyPwd)
+router.post("/modifyPwd", controllers.user.modifyPwd);
 
 // 保存客户信息
-router.post('/saveCustomer', controllers.customer.saveCustomer)
+router.post("/saveCustomer", controllers.customer.saveCustomer);
 
 // 获取客户信息
-router.get('/getCustomer', controllers.customer.getCustomer)
+router.get("/getCustomer", controllers.customer.getCustomer);
 
 // 获取客户信息数量
-router.get('/getCustomerCount', controllers.customer.getCustomerCount)
+router.get("/getCustomerCount", controllers.customer.getCustomerCount);
 
 // 删除客户数据
-router.post('/deleteCustomer', controllers.customer.deleteCustomer)
+router.post("/deleteCustomer", controllers.customer.deleteCustomer);
 
 // 获取一条客户数据
-router.get('/getOneCustomer', controllers.customer.getOneCustomer)
+router.get("/getOneCustomer", controllers.customer.getOneCustomer);
 
 // 登录
-router.post('/login', controllers.user.login)
+router.post("/login", controllers.user.login);
 
 // 获取一个用户信息
-router.get('/getOneUser', controllers.user.getOneUser)
+router.get("/getOneUser", controllers.user.getOneUser);
 
 // 保存公众号信息
-router.post('/savePublicNumber', controllers.publicNumber.savePublicNumber)
+router.post("/savePublicNumber", controllers.publicNumber.savePublicNumber);
 
-router.get('/getPublicNumber', controllers.publicNumber.getPublicNumber)
+router.get("/getPublicNumber", controllers.publicNumber.getPublicNumber);
 
-router.get('/getPublicNumberCount', controllers.publicNumber.getPublicNumberCount)
+router.get(
+  "/getPublicNumberCount",
+  controllers.publicNumber.getPublicNumberCount
+);
 
-router.post('/savePlan', controllers.plan.savePlan)
+router.post("/savePlan", controllers.plan.savePlan);
 
-router.get('/getPlan', controllers.plan.getPlan)
+router.get("/getPlan", controllers.plan.getPlan);
 
-router.get('/getPlanAll', controllers.plan.getPlanAll)
+router.get("/getPlanAll", controllers.plan.getPlanAll);
 
-router.get('/getPlanAllSum', controllers.plan.getPlanAllSum)
+router.get("/getPlanAllSum", controllers.plan.getPlanAllSum);
 
-router.get('/getPlanCount', controllers.plan.getPlanCount)
+router.get("/getPlanCount", controllers.plan.getPlanCount);
 
-router.post('/deletePlan', controllers.plan.deletePlan)
+router.post("/deletePlan", controllers.plan.deletePlan);
 
-router.post('/updatePlanBack', controllers.plan.updatePlanBack)
+router.post("/updatePlanBack", controllers.plan.updatePlanBack);
 
-router.post('/updatePlanPay', controllers.plan.updatePlanPay)
+router.post("/updatePlanPay", controllers.plan.updatePlanPay);
 
-router.get('/getOnePlan', controllers.plan.getOnePlan)
+router.get("/getOnePlan", controllers.plan.getOnePlan);
 
-router.post('/follow', controllers.customer.follow)
+router.post("/follow", controllers.customer.follow);
 
-router.get('/getAllCustomer', controllers.customer.getAllCustomer)
+router.get("/getAllCustomer", controllers.customer.getAllCustomer);
 
-router.post('/addFinance', controllers.plan.addFinance)
+router.get("/getCustomerLike", controllers.customer.getCustomerLike);
 
-router.post('/addInDetail', controllers.publicNumber.addInDetail)
+router.post("/addFinance", controllers.plan.addFinance);
 
-router.get('/getOnePublicNumber', controllers.publicNumber.getOnePublicNumber)
+router.post("/addInDetail", controllers.publicNumber.addInDetail);
 
-router.post('/uploadImage', controllers.upload.uploadImage)
+router.get("/getOnePublicNumber", controllers.publicNumber.getOnePublicNumber);
 
-router.get('/public/upload/*', controllers.upload.getImage)
+router.post("/uploadImage", controllers.upload.uploadImage);
 
-router.post('/updatePublicNumber', controllers.publicNumber.updatePublicNumber)
+router.get("/public/upload/*", controllers.upload.getImage);
 
-router.get('/getAuthor', controllers.author.getAuthor)
+router.post("/updatePublicNumber", controllers.publicNumber.updatePublicNumber);
 
-router.get('/getAuthorCount', controllers.author.getAuthorCount)
+router.get("/getAuthor", controllers.author.getAuthor);
 
-router.get('/getDept', controllers.dept.getDept)
+router.get("/getAuthorCount", controllers.author.getAuthorCount);
 
-router.get('/getDeptCount', controllers.dept.getDeptCount)
+router.get("/getDept", controllers.dept.getDept);
 
-router.get('/getAllUserInfo', controllers.user.getAllUserInfo)
+router.get("/getDeptCount", controllers.dept.getDeptCount);
 
-router.post('/updateAuthor', controllers.author.updateAuthor)
+router.get("/getAllUserInfo", controllers.user.getAllUserInfo);
 
-router.get('/isAuthor', controllers.author.isAuthor)
+router.post("/updateAuthor", controllers.author.updateAuthor);
 
-router.get('/getDataById', controllers.author.getDataById)
+router.get("/isAuthor", controllers.author.isAuthor);
 
-router.post('/updatePlan', controllers.plan.updatePlan)
+router.get("/getDataById", controllers.author.getDataById);
 
-router.post('/deletePublicNumber', controllers.publicNumber.deletePublicNumber)
+router.post("/updatePlan", controllers.plan.updatePlan);
 
-router.post('/updateImg', controllers.publicNumber.updateImg)
+router.post("/deletePublicNumber", controllers.publicNumber.deletePublicNumber);
 
-router.post('/changeData', controllers.publicNumber.changeData)
+router.post("/updateImg", controllers.publicNumber.updateImg);
+
+router.post("/changeData", controllers.publicNumber.changeData);
 
 // 处理404
 // router.post('*', controllers.error.notFind)
 // router.get('*', controllers.error.notFind)
 
-router.post('/saveNotification', controllers.notification.saveNotification)
+router.post("/saveNotification", controllers.notification.saveNotification);
 
-router.get('/getNotification', controllers.notification.getNotification)
+router.get("/getNotification", controllers.notification.getNotification);
 
-router.get('/getNotificationCount', controllers.notification.getNotificationCount)
+router.get(
+  "/getNotificationCount",
+  controllers.notification.getNotificationCount
+);
 
-router.post('/addInDetail', controllers.notification.addInDetail)
+router.post("/addInDetail", controllers.notification.addInDetail);
 
-router.get('/getOneNotification', controllers.notification.getOneNotification)
+router.get("/getOneNotification", controllers.notification.getOneNotification);
 
-router.post('/updateNotification', controllers.notification.updateNotification)
+router.post("/updateNotification", controllers.notification.updateNotification);
 
-router.post('/deleteNotification', controllers.notification.deleteNotification)
+router.post("/deleteNotification", controllers.notification.deleteNotification);
 
 // -------------------------------------------------------
 
-router.post('/saveWeibo', controllers.weibo.saveWeibo)
+router.post("/saveWeibo", controllers.weibo.saveWeibo);
 
-router.get('/getWeibo', controllers.weibo.getWeibo)
+router.get("/getWeibo", controllers.weibo.getWeibo);
 
-router.get('/getWeiboCount', controllers.weibo.getWeiboCount)
+router.get("/getWeiboCount", controllers.weibo.getWeiboCount);
 
-router.post('/addInDetail', controllers.weibo.addInDetail)
+router.post("/addInDetail", controllers.weibo.addInDetail);
 
-router.get('/getOneWeibo', controllers.weibo.getOneWeibo)
+router.get("/getOneWeibo", controllers.weibo.getOneWeibo);
 
-router.post('/updateWeibo', controllers.weibo.updateWeibo)
+router.post("/updateWeibo", controllers.weibo.updateWeibo);
 
-router.post('/deleteWeibo', controllers.weibo.deleteWeibo)
+router.post("/deleteWeibo", controllers.weibo.deleteWeibo);
 
-module.exports = router
+module.exports = router;
