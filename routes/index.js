@@ -149,4 +149,52 @@ router.post("/updateWeibo", controllers.weibo.updateWeibo);
 
 router.post("/deleteWeibo", controllers.weibo.deleteWeibo);
 
+// -------------------------------------------------------
+
+router.post("/savePlay", controllers.play.savePlay);
+
+router.get("/getPlay", controllers.play.getPlay);
+
+router.get("/getPlayCount", controllers.play.getPlayCount);
+
+router.post("/addInDetail", controllers.play.addInDetail);
+
+router.get("/getOnePlay", controllers.play.getOnePlay);
+
+router.post("/updatePlay", controllers.play.updatePlay);
+
+router.post("/deletePlay", controllers.play.deletePlay);
+
+// -------------------------------------------------------
+
+router.post("/saveColonel", controllers.colonel.saveColonel);
+
+router.get("/getColonel", controllers.colonel.getColonel);
+
+router.get("/getColonelCount", controllers.colonel.getColonelCount);
+
+router.post("/addInDetail", controllers.colonel.addInDetail);
+
+router.get("/getOneColonel", controllers.colonel.getOneColonel);
+
+router.post("/updateColonel", controllers.colonel.updateColonel);
+
+router.post("/deleteColonel", controllers.colonel.deleteColonel);
+
+// -------------------------------------------------------
+
+router.post("/saveCamera", controllers.camera.saveCamera);
+
+router.get("/getCamera", controllers.camera.getCamera);
+
+router.get("/getCameraCount", controllers.camera.getCameraCount);
+
+router.post("/addInDetail", controllers.camera.addInDetail);
+
+router.get("/getOneCamera", controllers.camera.getOneCamera);
+
+router.post("/updateCamera", controllers.camera.updateCamera);
+
+router.post("/deleteCamera", controllers.camera.deleteCamera);
+
 module.exports = router;
