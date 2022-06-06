@@ -185,7 +185,7 @@ module.exports.getCamera = async (ctx, next) => {
         }
       })
       .orderBy(searchOrder, "desc");
-    console.log("searchOrder", searchOrder);
+    const { openid } = ctx.header;
     ctx.state.data = res;
   } catch (error) {
     throw new Error(error);
