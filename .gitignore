@@ -1,7 +1,6 @@
 lib/node_modules
 .DS_Store
 aseet/.DS_Store
-node_modules/
 dist/
 apidoc/
 npm-debug.log*
